@@ -1,0 +1,14 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "nombre": "admin",
+      "email": "admin@gmail.com",
+      "password": "123456",
+      "tipo_plan": "premium",
+      "rol": "usuario",
+      "estado": "activo",
+      "ciudad": ""
+    }
+  ]
+}

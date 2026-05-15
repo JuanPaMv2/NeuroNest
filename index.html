@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>NeuroNest · Login</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body class="page-index">
+    <main class="splash splash--solo" aria-label="Inicio NeuroNest">
+      <div class="splash__logo-wrap">
+        <img
+          class="splash__logo"
+          src="img/ChatGPT Image 11 may 2026, 15_02_22.png"
+          width="320"
+          height="360"
+          alt="NeuroNest"
+        />
+      </div>
+      <button type="button" class="btn-comenzar" id="btnOpenAuthModal">Comenzar</button>
+
+      <div class="splash-auth-modal" id="splashAuthModal" hidden>
+        <div class="splash-auth-modal__backdrop" id="splashAuthBackdrop"></div>
+        <div class="splash-auth-modal__panel" role="dialog" aria-modal="true" aria-labelledby="authTitle">
+          <button type="button" class="splash-auth-modal__close" id="btnCloseAuthModal" aria-label="Cerrar">×</button>
+          <h2 id="authTitle" class="splash-auth-modal__title">Bienvenido a NeuroNest</h2>
+          
+
+          <div class="splash-auth-tabs" role="tablist" aria-label="Acceso de usuario">
+            <button type="button" class="splash-auth-tab is-active" data-auth-tab="login" role="tab" aria-selected="true">
+              Iniciar sesion
+            </button>
+            <button type="button" class="splash-auth-tab" data-auth-tab="register" role="tab" aria-selected="false">
+              Registrarse
+            </button>
+          </div>
+
+          <p class="splash-auth-message splash-auth-message--error" id="authMessageError" hidden></p>
+          <p class="splash-auth-message splash-auth-message--success" id="authMessageSuccess" hidden></p>
+
+          <div class="splash-auth-panel" data-auth-panel="login">
+            <form id="formLogin" autocomplete="on">
+              <label class="splash-auth-field">
+                Correo
+                <input type="email" id="loginEmail" name="email" maxlength="150" placeholder="correo@ejemplo.com" required />
+              </label>
+              <label class="splash-auth-field">
+                Contrasena
+                <input type="password" id="loginPassword" name="password" maxlength="255" placeholder="Tu contrasena" required />
+              </label>
+              <button type="submit" class="btn-primary splash-auth-submit">Entrar</button>
+            </form>
+          </div>
+
+          <div class="splash-auth-panel" data-auth-panel="register" hidden>
+            <form id="formRegister" autocomplete="on">
+              <label class="splash-auth-field">
+                Nombre completo
+                <input type="text" id="registerName" maxlength="100" placeholder="Tu nombre" required />
+              </label>
+              <label class="splash-auth-field">
+                Correo
+                <input type="email" id="registerEmail" maxlength="150" placeholder="correo@ejemplo.com" required />
+              </label>
+              <label class="splash-auth-field">
+                Contrasena
+                <input type="password" id="registerPassword" maxlength="255" placeholder="Minimo 6 caracteres" required />
+              </label>
+              <label class="splash-auth-field">
+                Confirmar contrasena
+                <input type="password" id="registerPasswordConfirm" maxlength="255" placeholder="Repite tu contrasena" required />
+              </label>
+              <button type="submit" class="btn-primary splash-auth-submit">Crear cuenta</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </main>
+    <script src="js/users-json-store.js"></script>
+    <script>
+      (function () {
+        var SESSION_KEY = "neuronest_session_v1";
+        var PROFILE_KEY = "neuronest_profile_v1";
+        var PLAN_KEY = "neuronest_plan_v1";
+
+        var authModal = document.getElementById("splashAuthModal");
+        var msgError = document.getElementById("authMessageError");
+        var msgSuccess = document.getElementById("authMessageSuccess");
+        var tabButtons = document.querySelectorAll("[data-auth-tab]");
+        var panels = document.querySelectorAll("[data-auth-panel]");
+
+        function hideMessages() {
+          msgError.hidden = true;
+          msgError.textContent = "";
+          msgSuccess.hidden = true;
+          msgSuccess.textContent = "";
+        }
+
+        function showError(text) {
+          hideMessages();
+          msgError.textContent = text;
+          msgError.hidden = false;
+        }
+
+        function showSuccess(text) {
+          hideMessages();
+          msgSuccess.textContent = text;
+          msgSuccess.hidden = false;
+        }
+
+        function normalizeEmail(s) {
+          return (s || "").trim().toLowerCase();
+        }
+
+        function applySession(user) {
+          localStorage.setItem(
+            SESSION_KEY,
+            JSON.stringify({
+              loggedIn: true,
+              at: Date.now(),
+              userId: user.id,
+            })
+          );
+          localStorage.setItem(
+            PROFILE_KEY,
+            JSON.stringify({
+              name: (user.nombre || "").trim(),
+              email: (user.email || "").trim(),
+              city: typeof user.ciudad === "string" ? user.ciudad.trim() : "",
+            })
+          );
+          var planRaw = String(user.tipo_plan || "").toLowerCase();
+          localStorage.setItem(PLAN_KEY, planRaw === "premium" ? "premium" : "normal");
+        }
+
+        function openAuthModal() {
+          authModal.removeAttribute("hidden");
+        }
+
+        function closeAuthModal() {
+          authModal.setAttribute("hidden", "");
+        }
+
+        function setActiveTab(tabName) {
+          var isRegister = tabName === "register";
+          tabButtons.forEach(function (button) {
+            var isActive = button.getAttribute("data-auth-tab") === (isRegister ? "register" : "login");
+            button.classList.toggle("is-active", isActive);
+            button.setAttribute("aria-selected", isActive ? "true" : "false");
+          });
+          panels.forEach(function (panel) {
+            var match = panel.getAttribute("data-auth-panel") === (isRegister ? "register" : "login");
+            panel.hidden = !match;
+          });
+        }
+
+        document.getElementById("btnOpenAuthModal").addEventListener("click", function () {
+          hideMessages();
+          openAuthModal();
+        });
+        document.getElementById("btnCloseAuthModal").addEventListener("click", closeAuthModal);
+        document.getElementById("splashAuthBackdrop").addEventListener("click", closeAuthModal);
+
+        tabButtons.forEach(function (button) {
+          button.addEventListener("click", function () {
+            hideMessages();
+            setActiveTab(button.getAttribute("data-auth-tab") === "register" ? "register" : "login");
+          });
+        });
+
+        document.addEventListener("keydown", function (event) {
+          if (event.key === "Escape") {
+            closeAuthModal();
+          }
+        });
+
+        document.getElementById("formLogin").addEventListener("submit", function (event) {
+          event.preventDefault();
+          hideMessages();
+          var email = normalizeEmail(document.getElementById("loginEmail").value);
+          var password = (document.getElementById("loginPassword").value || "").trim();
+          if (!email || !password) {
+            showError("Debes completar correo y contrasena.");
+            return;
+          }
+          if (!window.NeuronestUsersJson) {
+            showError("No se pudo cargar el modulo de usuarios.");
+            return;
+          }
+          window.NeuronestUsersJson.getAllUsers()
+            .then(function (all) {
+              if (!all || !all.length) {
+                showError("No hay usuarios disponibles. Recarga la pagina o borra los datos del sitio para este origen.");
+                return;
+              }
+              var user = null;
+              for (var i = 0; i < all.length; i++) {
+                if (normalizeEmail(all[i].email) === email) {
+                  user = all[i];
+                  break;
+                }
+              }
+              if (!user) {
+                showError("Correo o contrasena incorrectos.");
+                return;
+              }
+              if ((user.estado || "activo") !== "activo") {
+                showError("Tu cuenta esta suspendida.");
+                return;
+              }
+              var stored = String(user.password || "").trim();
+              if (stored !== password) {
+                showError("Correo o contrasena incorrectos.");
+                return;
+              }
+              applySession(user);
+              window.location.href = "app.html";
+            })
+            .catch(function () {
+              showError("Error al cargar usuarios. Comprueba la conexion y la ruta del sitio.");
+            });
+        });
+
+        document.getElementById("formRegister").addEventListener("submit", function (event) {
+          event.preventDefault();
+          hideMessages();
+          var registerName = document.getElementById("registerName").value.trim();
+          var registerEmail = normalizeEmail(document.getElementById("registerEmail").value);
+          var registerPassword = document.getElementById("registerPassword").value;
+          var registerPasswordConfirm = document.getElementById("registerPasswordConfirm").value;
+
+          if (!registerName || !registerEmail || !registerPassword || !registerPasswordConfirm) {
+            showError("Completa todos los campos para registrarte.");
+            return;
+          }
+          if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(registerEmail)) {
+            showError("Ingresa un correo valido.");
+            return;
+          }
+          if (registerName.length < 2 || registerName.length > 100) {
+            showError("El nombre debe tener entre 2 y 100 caracteres.");
+            return;
+          }
+          if (registerPassword.length < 6) {
+            showError("La contrasena debe tener al menos 6 caracteres.");
+            return;
+          }
+          if (registerPassword !== registerPasswordConfirm) {
+            showError("Las contrasenas no coinciden.");
+            return;
+          }
+
+          if (!window.NeuronestUsersJson) {
+            showError("No se pudo cargar el modulo de usuarios.");
+            return;
+          }
+          var N = window.NeuronestUsersJson;
+          N.getAllUsers()
+            .then(function (all) {
+              for (var i = 0; i < all.length; i++) {
+                if (normalizeEmail(all[i].email) === registerEmail) {
+                  showError("Ese correo ya esta registrado.");
+                  return null;
+                }
+              }
+              var newUser = {
+                id: N.nextUserId(all),
+                nombre: registerName,
+                email: registerEmail,
+                password: registerPassword,
+                tipo_plan: "gratuito",
+                rol: "usuario",
+                estado: "activo",
+                ciudad: "",
+              };
+              return N.persistNewUser(newUser).then(function () {
+                return newUser;
+              });
+            })
+            .then(function (created) {
+              if (!created) {
+                return;
+              }
+              showSuccess("Cuenta creada correctamente. Ya puedes iniciar sesion.");
+              setActiveTab("login");
+              document.getElementById("loginEmail").value = registerEmail;
+              document.getElementById("loginPassword").value = "";
+              document.getElementById("registerName").value = "";
+              document.getElementById("registerEmail").value = "";
+              document.getElementById("registerPassword").value = "";
+              document.getElementById("registerPasswordConfirm").value = "";
+            })
+            .catch(function (err) {
+              showError(err && err.message ? err.message : "No se pudo guardar el usuario.");
+            });
+        });
+
+        setActiveTab("login");
+      })();
+    </script>
+  </body>
+</html>

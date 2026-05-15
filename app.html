@@ -1,0 +1,2742 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>NeuroNest · App</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body class="page-app">
+    <div class="app-root" id="app">
+      <!-- Parte de enfoque -->
+      <section class="view view--enfoque is-active" id="view-enfoque" role="tabpanel">
+        <header class="screen-header">
+          <a href="index.html" class="icon-btn" aria-label="Volver al inicio">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M15 18l-6-6 6-6" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+
+
+
+          </a>
+
+
+            <div>
+              <h1 class="screen-header__title">Sesión Pomodoro</h1>
+            </div>
+          <span class="header-user-pill" data-header-user>Usuario</span>
+        </header>
+        <div class="focus-body">
+          <div class="focus-layout">
+            <div class="focus-main">
+              <div class="focus-ring-wrap" aria-live="polite">
+                <div class="focus-ring" id="focusRing">
+                  <div class="focus-ring__inner">
+                    <p class="focus-time" id="focusDisplay">00:00</p>
+                    <p class="focus-ring__lbl">Pomodoro actual</p>
+                    <p class="focus-ring__lbl2" id="focusTargetLabel">Objetivo: 25:00</p>
+                  </div>
+                </div>
+              </div>
+
+
+              <!-- parte de la barra de tiempo -->
+              <div class="focus-msg">
+                <span class="focus-msg__dash"></span>
+                <p id="focusStatus">Listo para comenzar tu sesion.</p>
+              </div>
+              <section class="alarm-picker">
+                <div class="alarm-picker__head">
+                  <strong>⏱ Sonido </strong>
+                </div>
+                <div class="alarm-picker__controls">
+                  <select id="focusToneSelect" class="alarm-picker__select"></select>
+                  <button type="button" class="alarm-picker__btn" id="btnPreviewFocusTone">Vista previa</button>
+                  <button type="button" class="alarm-picker__btn alarm-picker__btn--ghost" id="btnStopFocusTone">Parar</button>
+                </div>
+              </section>
+              <div class="premium-callout" id="focusPremiumCallout">
+                <span class="premium-callout__star" aria-hidden="true">★</span>
+                <div>
+                  <strong>Acceso Premium</strong>
+                  <p>Plan gratis: hasta 3 sesiones por 24 horas. Desbloquea sesiones ilimitadas con Premium.</p>
+                </div>
+              </div>
+              <div class="section-actions">
+                <button type="button" class="btn-primary" id="btnIniciar">Iniciar</button><br>
+                <button type="button" class="btn-secondary" id="btnGuardar">Finalizar y guardar</button><br>
+                <div class="focus-quick-actions" aria-label="Acciones rápidas del cronómetro">
+                  <button type="button" class="focus-icon-btn" id="btnPersonalizar" aria-label="Número de sesiones Pomodoro" title="Número de sesiones Pomodoro">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9">
+                      <path d="M4 20l3.6-.7L18.9 8a1.8 1.8 0 000-2.6l-.4-.4a1.8 1.8 0 00-2.6 0L4.6 16.3 4 20z" stroke-linejoin="round" />
+                      <path d="M13.7 6.3l4 4" stroke-linecap="round" />
+                    </svg>
+                  </button>
+                  <button type="button" class="focus-icon-btn" id="btnReiniciar" aria-label="Reiniciar cronómetro" title="Reiniciar cronómetro">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9">
+                      <path d="M20 7v10" stroke-linecap="round" />
+                      <path d="M17 12l-8-5v10l8-5z" stroke-linejoin="round" />
+                      <path d="M9 12L3 8v8l6-4z" stroke-linejoin="round" />
+                    </svg>
+                  </button>
+                  <button
+                    type="button"
+                    class="focus-icon-btn focus-icon-btn--danger"
+                    id="btnLimpiarHistorial"
+                    aria-label="Limpiar puntuaciones"
+                    title="Limpiar puntuaciones"
+                  >
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9">
+                      <path d="M4.8 6.5h14.4" stroke-linecap="round" />
+                      <path d="M8.5 6.5V5a1.7 1.7 0 011.7-1.7h3.6A1.7 1.7 0 0115.5 5v1.5" />
+                      <path d="M7.2 6.5l.9 12.1a1.6 1.6 0 001.6 1.4h4.6a1.6 1.6 0 001.6-1.4l.9-12.1" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <aside class="focus-history focus-history--side">
+              <div class="focus-history__head">
+                <h3>Puntuaciones</h3>
+                <strong id="focusTotal">Total: 0 sesiones</strong>
+              </div>
+              <ul id="focusScores" class="focus-history__list">
+                <li class="focus-history__empty">Aún no hay sesiones guardadas.</li>
+              </ul>
+            </aside>
+          </div>
+        </div>
+
+        <div class="focus-modal" id="focusCustomize" hidden>
+          <div class="focus-modal__backdrop" id="focusModalBackdrop"></div>
+          <section class="focus-customize" role="dialog" aria-modal="true" aria-labelledby="focusCustomizeTitle">
+            <h3 id="focusCustomizeTitle">Plan de Pomodoros</h3>
+            <p class="focus-customize__hint">Cada sesión son 25 minutos. Solo elige cuántas quieres completar en tu día.</p>
+            <div class="focus-customize__grid focus-customize__grid--one">
+              <label>
+                Número de sesiones
+                <input id="inputPomodoroSessions" type="number" min="1" max="24" value="4" />
+              </label>
+            </div>
+            <div class="focus-customize__actions">
+              <button type="button" class="btn-primary btn-primary--sm" id="btnAplicarObjetivo">Aplicar</button>
+              <button type="button" class="btn-secondary" id="btnCerrarPersonalizar">Cerrar</button>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <!-- Dashboard: Descanso -->
+      <section class="view view--descanso" id="view-descanso" role="tabpanel" hidden>
+        <header class="screen-header">
+          <a href="index.html" class="icon-btn" aria-label="Volver al inicio">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M15 18l-6-6 6-6" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </a>
+          <div>
+            <h1 class="screen-header__title">Pausa Activa</h1>
+          </div>
+          <span class="header-user-pill" data-header-user>Usuario</span>
+        </header>
+        <figure class="dash-figure dash-figure--stretch">
+          <img
+            id="stretchMainGif"
+            src="img/Cobras.gif"
+            alt=""
+            width="400"
+            height="300"
+          />
+        </figure>
+        <div class="dash-copy">
+          <h2>¡Es momento de recargar!</h2>
+          <p>Haz un estiramiento rápido y relaja tu mente.</p>
+        </div>
+        <div class="premium-callout premium-callout--block" id="stretchPremiumCallout">
+          <span class="premium-callout__star" aria-hidden="true">★</span>
+          <div>
+            <strong>Funciones Premium</strong>
+            <p>La pausa activa y estiramientos guiados estan disponibles con plan Premium.</p>
+          </div>
+        </div>
+        <div class="section-actions">
+          <button type="button" class="btn-primary" id="btnOpenStretches">Ver estiramientos</button>
+        </div>
+        <section class="stretch-timer-card">
+          <div class="stretch-timer-card__head">
+            <h3>Temporizador de estiramiento</h3>
+          </div>
+          <div class="alarm-picker alarm-picker--inline">
+            <div class="alarm-picker__head">
+              <strong>⏱ Sonido</strong>
+            </div>
+            <div class="alarm-picker__controls">
+              <select id="stretchToneSelect" class="alarm-picker__select"></select>
+              <button type="button" class="alarm-picker__btn" id="btnPreviewStretchTone">Vista previa</button>
+              <button type="button" class="alarm-picker__btn alarm-picker__btn--ghost" id="btnStopStretchTone">Parar</button>
+            </div>
+          </div>
+          <div class="stretch-timer-inputs">
+            <label>
+              Minutos
+              <input type="number" id="stretchMinutesInput" min="0" max="59" value="2" />
+            </label>
+            <label>
+              Segundos
+              <input type="number" id="stretchSecondsInput" min="0" max="59" value="0" />
+            </label>
+          </div>
+          <p class="stretch-countdown" id="stretchCountdown">02:00</p>
+          <div class="stretch-timer-actions">
+            <button type="button" class="btn-primary btn-primary--sm" id="btnStartStretchTimer">Iniciar</button>
+            <button type="button" class="btn-secondary" id="btnResetStretchTimer">Reiniciar</button>
+          </div>
+        </section>
+        <div class="stretch-modal" id="stretchModal" hidden>
+          <div class="stretch-modal__backdrop" id="stretchModalBackdrop"></div>
+          <section class="stretch-panel" role="dialog" aria-modal="true" aria-labelledby="stretchModalTitle">
+            <div class="stretch-panel__head">
+              <h3 id="stretchModalTitle">Selecciona</h3>
+              <button type="button" class="stretch-close-btn" id="btnCloseStretchModal">Cerrar</button>
+            </div>
+            <div class="stretch-options" id="stretchOptions"></div>
+          </section>
+        </div>
+      </section>
+
+      <!-- Dashboard: Sueño -->
+      <section class="view view--sueno" id="view-sueno" role="tabpanel" hidden>
+        <header class="screen-header">
+          <a href="index.html" class="icon-btn" aria-label="Volver al inicio">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M15 18l-6-6 6-6" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </a>
+          <div>
+            <h1 class="screen-header__title">Rutina de sueño</h1>
+          </div>
+          <span class="header-user-pill" data-header-user>Usuario</span>
+        </header>
+        <section class="sleep-panel sleep-panel--audio sleep-panel--audio-hero">
+          <h3 class="sleep-panel__title">Audio para dormir</h3>
+          <p class="sleep-audio-note">Pulsa reproducir: la pista suena en bucle hasta que la pauses.</p>
+          <button type="button" class="btn-primary btn-primary--sm" id="btnPlaySleepAudio">Reproducir audio</button>
+          <div class="premium-callout premium-callout--compact" id="sleepAudioPremiumCallout">
+            <span class="premium-callout__star" aria-hidden="true">★</span>
+            <div>
+              <strong>Audio Premium</strong>
+              <p>El audio relajante esta disponible para usuarios Premium.</p>
+            </div>
+          </div>
+          <audio id="sleepAudio" loop preload="metadata">
+            <source src="audio/2.mp3" type="audio/mpeg" />
+          </audio>
+        </section>
+        <div class="dash-copy">
+          <h2>Un buen día empieza la noche anterior</h2>
+          <p>Planifica cuándo apagas pantallas y cuándo te acuestas.</p>
+        </div>
+        <div class="section-actions">
+          <button type="button" class="btn-primary" id="btnVerSugerencias">Plan de sueño</button>
+          <button type="button" class="link-soft" id="btnRegistrarHora">Registrar hora ideal</button>
+        </div>
+        <div class="premium-callout premium-callout--block" id="sleepAlarmPremiumCallout">
+          <span class="premium-callout__star" aria-hidden="true">★</span>
+          <div>
+            <strong>Limite del plan gratis</strong>
+            <p>Plan gratis: 1 alarma cada 24 horas. Con Premium puedes crear alarmas ilimitadas.</p>
+          </div>
+        </div>
+        <section class="sleep-selected" id="sleepSelectedPlan" aria-live="polite">
+          <div class="sleep-selected__head">
+            <strong>Horario seleccionado</strong>
+            <span id="sleepSelectedSource">Sin configurar</span>
+          </div>
+          <div class="sleep-selected__clocks">
+            <div class="sleep-clock">
+              <span class="sleep-clock__label">Dormir</span>
+              <div class="sleep-clock__time">
+                <span id="sleepBedClock">--:--</span>
+                <small id="sleepBedClockPeriod">--</small>
+              </div>
+            </div>
+            <div class="sleep-clock">
+              <span class="sleep-clock__label">Despertar</span>
+              <div class="sleep-clock__time">
+                <span id="sleepWakeClock">--:--</span>
+                <small id="sleepWakeClockPeriod">--</small>
+              </div>
+            </div>
+          </div>
+          <p class="sleep-selected__alarm" id="sleepAlarmStatus">Alarma no programada.</p>
+          <div class="alarm-picker alarm-picker--inline">
+            <div class="alarm-picker__head">
+              <strong>⏱ Sonido </strong>
+            </div>
+            <div class="alarm-picker__controls">
+              <select id="sleepToneSelect" class="alarm-picker__select"></select>
+              <button type="button" class="alarm-picker__btn" id="btnPreviewSleepTone">Vista previa</button>
+              <button type="button" class="alarm-picker__btn alarm-picker__btn--ghost" id="btnStopSleepTone">Parar</button>
+            </div>
+          </div>
+        </section>
+        <section class="sleep-list-card">
+          <div class="sleep-list-card__head">
+            <h3>Alarmas de sueño</h3>
+            <div class="list-head-actions">
+              <span id="sleepAlarmCount">0 alarmas</span>
+              <button type="button" class="list-clean-btn" id="btnSleepClearAll">Limpiar todo</button>
+            </div>
+          </div>
+          <ul class="sleep-alarm-list" id="sleepAlarmList">
+            <li class="sleep-alarm-list__empty">No hay alarmas creadas.</li>
+          </ul>
+        </section>
+        <div class="sleep-modal" id="sleepSuggestionsModal" hidden>
+          <div class="sleep-modal__backdrop" id="sleepSuggestionsBackdrop"></div>
+          <section class="sleep-panel sleep-panel--modal" role="dialog" aria-modal="true" aria-labelledby="sleepSuggestionsTitle">
+            <div class="sleep-panel__head">
+              <h3 class="sleep-panel__title" id="sleepSuggestionsTitle">Horarios recomendados</h3>
+              <button type="button" class="sleep-close-btn" id="btnCloseSleepSuggestions" aria-label="Cerrar sugerencias">Cerrar</button>
+            </div>
+            <div class="sleep-suggestions" id="sleepSuggestions"></div>
+          </section>
+        </div>
+        <div class="sleep-modal" id="sleepManualModal" hidden>
+          <div class="sleep-modal__backdrop" id="sleepManualBackdrop"></div>
+          <section class="sleep-panel sleep-panel--modal" role="dialog" aria-modal="true" aria-labelledby="sleepManualTitle">
+            <div class="sleep-panel__head">
+              <h3 class="sleep-panel__title" id="sleepManualTitle">Registrar horario personalizado</h3>
+              <button type="button" class="sleep-close-btn" id="btnCloseSleepManual" aria-label="Cerrar registro">Cerrar</button>
+            </div>
+            <div class="sleep-manual-grid">
+              <label>
+                Hora de acostarse
+                <div class="sleep-time-row">
+                  <input type="number" id="sleepBedHour" min="1" max="12" value="10" />
+                  <span>:</span>
+                  <input type="number" id="sleepBedMinute" min="0" max="59" value="30" />
+                  <select id="sleepBedPeriod">
+                    <option value="PM" selected>PM</option>
+                    <option value="AM">AM</option>
+                  </select>
+                </div>
+              </label>
+              <label>
+                Hora de levantarse
+                <div class="sleep-time-row">
+                  <input type="number" id="sleepWakeHour" min="1" max="12" value="6" />
+                  <span>:</span>
+                  <input type="number" id="sleepWakeMinute" min="0" max="59" value="30" />
+                  <select id="sleepWakePeriod">
+                    <option value="AM" selected>AM</option>
+                    <option value="PM">PM</option>
+                  </select>
+                </div>
+              </label>
+             
+            </div>
+            <button type="button" class="btn-secondary" id="btnGuardarHorarioManual">Guardar horario</button>
+          </section>
+        </div>
+      </section>
+
+      <!-- Dashboard: Mascotas -->
+      <section class="view view--mascotas" id="view-mascotas" role="tabpanel" hidden>
+        <header class="screen-header">
+          <a href="index.html" class="icon-btn" aria-label="Volver al inicio">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M15 18l-6-6 6-6" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </a>
+          <div>
+            <h1 class="screen-header__title">Mascotas</h1>
+          </div>
+          <span class="header-user-pill" data-header-user>Usuario</span>
+        </header>
+        <figure class="dash-figure dash-figure--stretch">
+          <img
+            src="img/gatos.gif"
+            alt="Animación con mascotas"
+            width="400"
+            height="300"
+          />
+        </figure>
+        <div class="dash-copy">
+          <h2>Pequeños momentos cuentan</h2>
+          <p>Un paseo corto o jugar un rato te ayuda a despejar la cabeza.</p>
+        </div>
+        <div class="section-actions">
+          <button type="button" class="btn-primary" id="btnMascotaPlan">Planes con mascota</button>
+        </div>
+        <div class="premium-callout premium-callout--block" id="petPremiumCallout">
+          <span class="premium-callout__star" aria-hidden="true">★</span>
+          <div>
+            <strong>Plan Premium</strong>
+            <p>Plan gratis: hasta 2 recordatorios. Para recordatorios ilimitados, activa Premium.</p>
+          </div>
+        </div>
+        <section class="pet-selected" id="petSummary" aria-live="polite">
+          <div class="pet-selected__head">
+            <strong>Recordatorio seleccionado</strong>
+            <span id="petSummaryTag">Sin seleccionar</span>
+          </div>
+          <div class="pet-selected__grid">
+            <article class="pet-pill">
+              <span class="pet-pill__label">Plan</span>
+              <strong id="petSummaryActivity">-</strong>
+            </article>
+            <article class="pet-pill">
+              <span class="pet-pill__label">Duración</span>
+              <strong id="petSummaryDuration">-</strong>
+            </article>
+            <article class="pet-pill">
+              <span class="pet-pill__label">Hora</span>
+              <strong id="petSummaryReminder">-</strong>
+            </article>
+          </div>
+          <p class="pet-selected__alarm" id="petAlarmStatus">Recordatorio no programado.</p>
+          <div class="alarm-picker alarm-picker--inline">
+            <div class="alarm-picker__head">
+              <strong>⏱ Sonido</strong>
+            </div>
+            <div class="alarm-picker__controls">
+              <select id="petToneSelect" class="alarm-picker__select"></select>
+              <button type="button" class="alarm-picker__btn" id="btnPreviewPetTone">Vista previa</button>
+              <button type="button" class="alarm-picker__btn alarm-picker__btn--ghost" id="btnStopPetTone">Parar</button>
+            </div>
+          </div>
+        </section>
+        <section class="pet-list-card">
+          <div class="pet-list-card__head">
+            <h3>Recordatorios</h3>
+            <div class="list-head-actions">
+              <span id="petRecordCount">0 recordatorios</span>
+              <button type="button" class="list-clean-btn" id="btnPetClearAll">Limpiar todo</button>
+            </div>
+          </div>
+          <ul class="pet-record-list" id="petRecordList">
+            <li class="pet-record-list__empty">Aún no has creado recordatorios.</li>
+          </ul>
+        </section>
+        <div class="pet-modal" id="petPlansModal" hidden>
+          <div class="pet-modal__backdrop" id="petPlansBackdrop"></div>
+          <section class="pet-card pet-card--modal" role="dialog" aria-modal="true" aria-labelledby="petPlansTitle">
+            <div class="pet-card__head">
+              <h3 id="petPlansTitle">Planes de pausa con mascota</h3>
+              <button type="button" class="pet-close-btn" id="btnClosePetPlans">Cerrar</button>
+            </div>
+            <div class="pet-options" id="petOptions"></div>
+          </section>
+        </div>
+        <div class="pet-modal" id="petReminderModal" hidden>
+          <div class="pet-modal__backdrop" id="petReminderBackdrop"></div>
+          <section class="pet-card pet-card--modal" role="dialog" aria-modal="true" aria-labelledby="petReminderTitle">
+            <div class="pet-card__head">
+              <h3 id="petReminderTitle">Nuevo recordatorio</h3>
+              <button type="button" class="pet-close-btn" id="btnClosePetReminder">Cerrar</button>
+            </div>
+            <div class="pet-form">
+              <label>
+                Plan de pausa
+                <select id="petPlanSelect"></select>
+              </label>
+
+
+              <label>
+                Hora del recordatorio
+                <div class="pet-time-row">
+                  <input type="number" id="petHourInput" min="1" max="12" value="7" />
+                  <span>:</span>
+                  <input type="number" id="petMinuteInput" min="0" max="59" value="30" />
+                  <select id="petPeriodInput">
+                    <option value="AM" selected>AM</option>
+                    <option value="PM">PM</option>
+                  </select>
+                </div>
+              </label>
+              
+            </div>
+            <button type="button" class="btn-secondary" id="btnSavePetReminder">Guardar recordatorio</button>
+          </section>
+        </div>
+      </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      <!-- Dashboard: Perfil -->
+      <section class="view view--perfil" id="view-perfil" role="tabpanel" hidden>
+        <header class="screen-header">
+          <a href="index.html" class="icon-btn" aria-label="Volver al inicio">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M15 18l-6-6 6-6" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </a>
+          <div>
+            <h1 class="screen-header__title">Perfil</h1>
+          </div>
+          <span class="header-user-pill" data-header-user>Usuario</span>
+        </header>
+        <section class="profile-hero">
+          <div class="avatar-wrap">
+            <img src="img/5.png" alt="" width="240" height="240" />
+          </div>
+          <div class="profile-identity">
+            <p class="profile-display-name" id="profileDisplayName">Tu nombre</p>
+            <p class="profile-display-email" id="profileDisplayEmail"></p>
+            <p class="profile-display-city" id="profileDisplayCity" hidden></p>
+          </div>
+        </section>
+
+        
+        <div class="profile-card">
+          <div class="profile-plan-row">
+            <span class="profile-plan-label">Plan actual</span>
+            <span class="plan-badge" id="profilePlanBadge">Normal</span>
+          </div>
+
+
+        <div class="profile-meta-grid">
+  <article class="profile-meta-item profile-meta-item--single">
+    <span class="profile-meta-item__label">Cuenta creada</span>
+    <strong class="profile-meta-item__value" id="profileSinceDate">-</strong>
+  </article>
+</div>
+
+          <div class="profile-actions">
+            <button type="button" class="btn-primary" id="btnEditProfile">Editar perfil</button>
+            <button type="button" class="link-soft profile-premium-link" id="btnOpenPremiumModal">Ver plan Premium</button>
+            <button type="button" class="link-soft danger" id="btnLogout">Cerrar sesión</button>
+          </div>
+        </div>
+
+        <div class="profile-modal" id="profileEditModal" hidden>
+          <div class="profile-modal__backdrop" id="profileEditBackdrop"></div>
+          <section class="profile-edit-panel" role="dialog" aria-modal="true" aria-labelledby="profileEditTitle">
+            <div class="profile-edit-panel__head">
+              <h3 id="profileEditTitle">Editar perfil</h3>
+              <button type="button" class="stretch-close-btn" id="btnCloseProfileEdit">Cerrar</button>
+            </div>
+            <div class="profile-edit-form">
+              <label>
+                Nombre
+                <input type="text" id="profileNameInput" maxlength="80" placeholder="Tu nombre" autocomplete="name" />
+              </label>
+              <label>
+                Correo electrónico
+                <input type="email" id="profileEmailInput" maxlength="120" placeholder="correo@ejemplo.com" autocomplete="email" />
+              </label>
+              <label>
+                Ciudad
+                <input type="text" id="profileCityInput" maxlength="80" placeholder="Opcional" autocomplete="address-level2" />
+              </label>
+            </div>
+            <div class="profile-edit-panel__actions">
+              <button type="button" class="btn-primary btn-primary--sm" id="btnSaveProfile">Guardar cambios</button>
+              <button type="button" class="btn-secondary" id="btnCancelProfileEdit">Cancelar</button>
+            </div>
+          </section>
+        </div>
+
+        <div class="profile-modal premium-modal" id="premiumPlanModal" hidden>
+          <div class="profile-modal__backdrop" id="premiumModalBackdrop"></div>
+          <section class="premium-plan-card" role="dialog" aria-modal="true" aria-labelledby="premiumPlanHeading">
+            <button type="button" class="premium-plan-card__close" id="btnClosePremiumModal" aria-label="Cerrar">×</button>
+            <p class="premium-plan-card__kicker" id="premiumPlanHeading">Plan de suscripción</p>
+            <hr class="premium-plan-card__rule" />
+            <div class="premium-plan-card__title-row">
+              <span class="premium-plan-card__star" aria-hidden="true">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                  <path
+                    d="M12 2l2.9 7.4h7.8l-6.3 4.8 2.4 7.8L12 17.8 5.2 22l2.4-7.8L1.3 9.4h7.8L12 2z"
+                    fill="#c5a059"
+                    stroke="#b08d42"
+                    stroke-width="0.8"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </span>
+              <h4 class="premium-plan-card__subtitle">Acceso Premium</h4>
+            </div>
+            <ul class="premium-plan-card__features">
+              <li>Contenido exclusivo</li>
+              <li>Rutinas personalizadas</li>
+              <li>Programas de sueño</li>
+              <li>Herramientas para mascotas</li>
+              <li>Acceso a profesionales</li>
+            </ul>
+            <button type="button" class="premium-plan-card__cta" id="btnPremiumTrial">Probar premium</button>
+            <p class="premium-plan-card__price">$4.99 / mes</p>
+          </section>
+        </div>
+
+        <div class="profile-modal premium-checkout-modal" id="premiumCheckoutModal" hidden>
+          <div class="profile-modal__backdrop" id="premiumCheckoutBackdrop"></div>
+          <section class="premium-checkout-panel" role="dialog" aria-modal="true" aria-labelledby="premiumCheckoutTitle">
+            <div class="premium-checkout-panel__head">
+              <h3 id="premiumCheckoutTitle">Activar Premium</h3>
+              <button type="button" class="stretch-close-btn" id="btnClosePremiumCheckout" aria-label="Cerrar">Cerrar</button>
+            </div>
+            <p class="premium-checkout-panel__hint">Introduce los datos de tu tarjeta para completar la activación (demostración local).</p>
+            <form class="premium-checkout-form" id="formPremiumCheckout" autocomplete="off">
+              <label>
+                Titular de la tarjeta
+                <input type="text" id="premiumCardName" name="ccname" maxlength="80" placeholder="Como figura en la tarjeta" required />
+              </label>
+              <label>
+                Número de tarjeta
+                <input type="text" id="premiumCardNumber" inputmode="numeric" maxlength="19" placeholder="0000 0000 0000 0000" required />
+              </label>
+              <div class="premium-checkout-form__row">
+                <label>
+                  Caducidad (MM/AA)
+                  <input type="text" id="premiumCardExpiry" maxlength="5" placeholder="MM/AA" required />
+                </label>
+                <label>
+                  CVV
+                  <input type="password" id="premiumCardCvv" inputmode="numeric" maxlength="4" placeholder="•••" required />
+                </label>
+              </div>
+              <div class="premium-checkout-panel__actions">
+                <button type="submit" class="btn-primary btn-primary--sm" id="btnConfirmPremiumCheckout">Confirmar y activar</button>
+                <button type="button" class="btn-secondary" id="btnCancelPremiumCheckout">Cancelar</button>
+              </div>
+            </form>
+          </section>
+        </div>
+      </section>
+
+      <nav class="bottom-nav" aria-label="Menú inferior">
+        <button type="button" id="tab-enfoque" aria-current="page">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65">
+            <rect x="10.5" y="3.5" width="3" height="2.2" rx="0.6" stroke-linejoin="round" />
+            <circle cx="12" cy="13" r="7.2" />
+            <line x1="12" y1="13" x2="12" y2="8.6" stroke-linecap="round" />
+          </svg>
+          <span>Enfoque</span>
+        </button>
+        <button type="button" id="tab-descanso">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65">
+            <path
+              d="M12 3c-.4 4-6 9-6 14a6 6 0 103.4-5c1.9-3 4.9-8 6-9zm0 17.5v.05"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+          <span>Descanso</span>
+        </button>
+        <button type="button" id="tab-sueno">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65">
+            <path
+              d="M15.2 17.5c-4.8-.5-8.4-4.7-7.8-9.7.2-1.6.8-3.1 1.7-4.3A8.2 8.2 0 1014.2 21c.4-.1.7-.35 1-.6z"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+          <span>Sueño</span>
+        </button>
+        <button type="button" id="tab-mascotas">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+            <ellipse cx="10" cy="8" rx="2.2" ry="3" transform="rotate(-18 10 8)" />
+            <ellipse cx="14" cy="8" rx="2.2" ry="3" transform="rotate(18 14 8)" />
+            <ellipse cx="7.5" cy="12" rx="2" ry="2.6" transform="rotate(-35 7.5 12)" />
+            <ellipse cx="16.5" cy="12" rx="2" ry="2.6" transform="rotate(35 16.5 12)" />
+            <path
+              d="M12 14.2c2.6 0 4.6 1.7 4.6 3.8 0 1.3-.7 2.4-1.8 3.1-2.2 1.3-6.2 1.3-8.4 0-1.1-.7-1.8-1.8-1.8-3.1 0-2.1 2-3.8 4.6-3.8z"
+              stroke-linejoin="round"
+            />
+          </svg>
+          <span>Mascotas</span>
+        </button>
+        <button type="button" id="tab-perfil">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+            <circle cx="12" cy="9" r="3.8" />
+            <path d="M6.5 19.8c1-3.2 3.8-5.3 7.5-5.3s6.5 2.1 7.5 5.3" stroke-linecap="round" />
+          </svg>
+          <span>Perfil</span>
+        </button>
+      </nav>
+      <div class="alarm-now" id="alarmNowBar" hidden>
+        <div>
+          <strong id="alarmNowTitle">⏱ Alarma activa</strong>
+          <p id="alarmNowLabel">Sonando...</p>
+        </div>
+        <button type="button" class="alarm-now__stop" id="btnStopActiveAlarm">Detener</button>
+      </div>
+
+      <button type="button" class="pro-cita-fab" id="btnProCitaFab" hidden aria-label="Agendar cita con profesional">
+        <span class="pro-cita-fab__pulse" aria-hidden="true"></span>
+        <svg class="pro-cita-fab__icon" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
+          <path d="M12 11a3.5 3.5 0 100-7 3.5 3.5 0 000 7z" stroke-linejoin="round" />
+          <path d="M5.5 20.2a6.5 6.5 0 0113 0" stroke-linecap="round" />
+          <path d="M18 8.5h2.5M19.25 7.25v2.5" stroke-linecap="round" />
+        </svg>
+      </button>
+
+      <div class="pro-cita-modal" id="proCitaModal" hidden>
+        <div class="pro-cita-modal__backdrop" id="proCitaBackdrop"></div>
+        <div class="pro-cita-modal__wrap">
+          <section class="pro-cita-panel" role="dialog" aria-modal="true" aria-labelledby="proCitaTitle">
+            <div class="pro-cita-panel__head">
+              <div>
+                <h2 id="proCitaTitle" class="pro-cita-panel__title">Cita con profesional</h2>
+                <p class="pro-cita-panel__sub">Citas</p>
+              </div>
+              <button type="button" class="pro-cita-panel__close" id="btnCloseProCita" aria-label="Cerrar">×</button>
+            </div>
+            <p class="pro-cita-panel__hint" id="proCitaProHint"></p>
+            <div class="pro-cita-pro-list" id="proCitaProButtons" role="tablist" aria-label="Profesionales"></div>
+            <div class="pro-cita-week-nav">
+              <button type="button" class="btn-secondary btn-primary--sm" id="btnProCitaPrevWeek">← Semana anterior</button>
+              <span class="pro-cita-week-label" id="proCitaWeekLabel"></span>
+              <button type="button" class="btn-secondary btn-primary--sm" id="btnProCitaNextWeek">Siguiente semana →</button>
+            </div>
+            <div class="pro-cita-scroll" id="proCitaGridHost"></div>
+            <p class="pro-cita-legend">
+              <span><span class="pro-cita-dot pro-cita-dot--free"></span> Disponible</span>
+              <span><span class="pro-cita-dot pro-cita-dot--mine"></span> Tu cita</span>
+              <span><span class="pro-cita-dot pro-cita-dot--busy"></span> Ocupado</span>
+            </p>
+          </section>
+        </div>
+      </div>
+    </div>
+
+    <script src="js/users-json-store.js"></script>
+    <script>
+      (function () {
+        var SESSION_AUTH_KEY = "neuronest_session_v1";
+        var PROFILE_STORAGE_KEY = "neuronest_profile_v1";
+        var PLAN_STORAGE_KEY = "neuronest_plan_v1";
+        var FOCUS_USAGE_KEY = "neuronest_focus_usage_v1";
+        var SLEEP_ALARM_LIMIT_KEY = "neuronest_sleep_alarm_limit_v1";
+        var PRO_BOOKINGS_KEY = "neuronest_pro_bookings_v1";
+
+        function neuronestClearAllStorage() {
+          var skip = {};
+          if (window.NeuronestUsersJson && Array.isArray(window.NeuronestUsersJson.preserveOnLogoutKeys)) {
+            window.NeuronestUsersJson.preserveOnLogoutKeys.forEach(function (k) {
+              skip[k] = true;
+            });
+          }
+          var keys = [];
+          for (var i = localStorage.length - 1; i >= 0; i--) {
+            var k = localStorage.key(i);
+            if (k && k.indexOf("neuronest_") === 0 && !skip[k]) {
+              keys.push(k);
+            }
+          }
+          keys.forEach(function (key) {
+            localStorage.removeItem(key);
+          });
+        }
+
+        function neuronestIsSessionValid() {
+          try {
+            var raw = localStorage.getItem(SESSION_AUTH_KEY);
+            var o = raw ? JSON.parse(raw) : null;
+            return !!(o && o.loggedIn === true);
+          } catch (e) {
+            return false;
+          }
+        }
+
+        function neuronestHasRegisteredProfile() {
+          try {
+            var raw = localStorage.getItem(PROFILE_STORAGE_KEY);
+            var profile = raw ? JSON.parse(raw) : null;
+            return !!(profile && typeof profile.name === "string" && profile.name.trim());
+          } catch (e) {
+            return false;
+          }
+        }
+
+        if (!neuronestIsSessionValid() || !neuronestHasRegisteredProfile()) {
+          window.location.replace("index.html");
+          return;
+        }
+
+        function getPlanTier() {
+          try {
+            return localStorage.getItem(PLAN_STORAGE_KEY) === "premium" ? "premium" : "normal";
+          } catch (e) {
+            return "normal";
+          }
+        }
+
+        function savePlanTier(tier) {
+          localStorage.setItem(PLAN_STORAGE_KEY, tier === "premium" ? "premium" : "normal");
+        }
+
+        function isPremiumPlan() {
+          return getPlanTier() === "premium";
+        }
+
+        function refreshPremiumAccessNotices() {
+          var premium = isPremiumPlan();
+          var focusBanner = document.getElementById("focusPremiumCallout");
+          var stretchBanner = document.getElementById("stretchPremiumCallout");
+          var sleepAudioBanner = document.getElementById("sleepAudioPremiumCallout");
+          var sleepAlarmBanner = document.getElementById("sleepAlarmPremiumCallout");
+          var petBanner = document.getElementById("petPremiumCallout");
+          var sleepAudioBtn = document.getElementById("btnPlaySleepAudio");
+          var openStretchBtn = document.getElementById("btnOpenStretches");
+          var stretchStartBtn = document.getElementById("btnStartStretchTimer");
+          var stretchResetBtn = document.getElementById("btnResetStretchTimer");
+          var stretchMinutes = document.getElementById("stretchMinutesInput");
+          var stretchSeconds = document.getElementById("stretchSecondsInput");
+
+          if (focusBanner) {
+            focusBanner.hidden = premium;
+          }
+          if (stretchBanner) {
+            stretchBanner.hidden = premium;
+          }
+          if (sleepAudioBanner) {
+            sleepAudioBanner.hidden = premium;
+          }
+          if (sleepAlarmBanner) {
+            sleepAlarmBanner.hidden = premium;
+          }
+          if (petBanner) {
+            petBanner.hidden = premium;
+          }
+          if (sleepAudioBtn) {
+            sleepAudioBtn.classList.toggle("is-premium-locked", !premium);
+          }
+          if (openStretchBtn) {
+            openStretchBtn.disabled = !premium;
+          }
+          if (stretchStartBtn) {
+            stretchStartBtn.disabled = !premium;
+          }
+          if (stretchResetBtn) {
+            stretchResetBtn.disabled = !premium;
+          }
+          if (stretchMinutes) {
+            stretchMinutes.disabled = !premium;
+          }
+          if (stretchSeconds) {
+            stretchSeconds.disabled = !premium;
+          }
+        }
+
+        var views = {
+          enfoque: document.getElementById("view-enfoque"),
+          descanso: document.getElementById("view-descanso"),
+          sueno: document.getElementById("view-sueno"),
+          mascotas: document.getElementById("view-mascotas"),
+          perfil: document.getElementById("view-perfil"),
+        };
+
+        var tabs = {
+          enfoque: document.getElementById("tab-enfoque"),
+          descanso: document.getElementById("tab-descanso"),
+          sueno: document.getElementById("tab-sueno"),
+          mascotas: document.getElementById("tab-mascotas"),
+          perfil: document.getElementById("tab-perfil"),
+        };
+
+        function setView(key) {
+          Object.keys(views).forEach(function (k) {
+            var el = views[k];
+            var on = k === key;
+            el.classList.toggle("is-active", on);
+            if (on) {
+              el.removeAttribute("hidden");
+            } else {
+              el.setAttribute("hidden", "");
+            }
+          });
+          Object.keys(tabs).forEach(function (k) {
+            tabs[k].setAttribute("aria-current", k === key ? "page" : "false");
+          });
+        }
+
+        Object.keys(tabs).forEach(function (key) {
+          tabs[key].addEventListener("click", function () {
+            setView(key);
+          });
+        });
+
+        var hash = (window.location.hash || "").replace("#", "").toLowerCase();
+        if (views[hash]) {
+          setView(hash);
+        }
+
+        /* Cronómetro de Enfoque */
+        var focusDisplay = document.getElementById("focusDisplay");
+        var btnIniciar = document.getElementById("btnIniciar");
+        var btnGuardar = document.getElementById("btnGuardar");
+        var btnPersonalizar = document.getElementById("btnPersonalizar");
+        var btnReiniciar = document.getElementById("btnReiniciar");
+        var btnLimpiarHistorial = document.getElementById("btnLimpiarHistorial");
+        var focusToneSelect = document.getElementById("focusToneSelect");
+        var btnPreviewFocusTone = document.getElementById("btnPreviewFocusTone");
+        var btnStopFocusTone = document.getElementById("btnStopFocusTone");
+        var btnAplicarObjetivo = document.getElementById("btnAplicarObjetivo");
+        var btnCerrarPersonalizar = document.getElementById("btnCerrarPersonalizar");
+        var inputPomodoroSessions = document.getElementById("inputPomodoroSessions");
+        var focusCustomize = document.getElementById("focusCustomize");
+        var focusModalBackdrop = document.getElementById("focusModalBackdrop");
+        var focusStatus = document.getElementById("focusStatus");
+        var focusTargetLabel = document.getElementById("focusTargetLabel");
+        var focusScores = document.getElementById("focusScores");
+        var focusTotal = document.getElementById("focusTotal");
+        var focusRing = document.getElementById("focusRing");
+        var focusPremiumCallout = document.getElementById("focusPremiumCallout");
+        var stretchPremiumCallout = document.getElementById("stretchPremiumCallout");
+        var sleepAudioPremiumCallout = document.getElementById("sleepAudioPremiumCallout");
+        var sleepAlarmPremiumCallout = document.getElementById("sleepAlarmPremiumCallout");
+        var petPremiumCallout = document.getElementById("petPremiumCallout");
+
+        var STORAGE_KEY = "neuronest_focus_scores_v1";
+        var STORAGE_PLAN_KEY = "neuronest_focus_plan_sessions_v1";
+        var elapsedSeconds = 0;
+        var targetSeconds = 25 * 60;
+        var plannedSessionGoal = 4;
+        var focusTimer = null;
+        var running = false;
+        var notifiedFocusLimit = false;
+
+        function getPremiumLeftTime(msRemaining) {
+          var totalMinutes = Math.ceil(msRemaining / 60000);
+          var hh = Math.floor(totalMinutes / 60);
+          var mm = totalMinutes % 60;
+          return hh + "h " + String(mm).padStart(2, "0") + "min";
+        }
+
+        function getFocusUsageList() {
+          try {
+            var raw = localStorage.getItem(FOCUS_USAGE_KEY);
+            var list = raw ? JSON.parse(raw) : [];
+            return Array.isArray(list) ? list : [];
+          } catch (e) {
+            return [];
+          }
+        }
+
+        function getFocusUsageWindow() {
+          var now = Date.now();
+          var dayAgo = now - 24 * 60 * 60 * 1000;
+          var list = getFocusUsageList().filter(function (value) {
+            return typeof value === "number" && value >= dayAgo;
+          });
+          localStorage.setItem(FOCUS_USAGE_KEY, JSON.stringify(list));
+          return list;
+        }
+
+        function getAvailableFocusSessions() {
+          if (isPremiumPlan()) {
+            return Infinity;
+          }
+          return Math.max(0, 3 - getFocusUsageWindow().length);
+        }
+
+        function registerFocusSessionUsage() {
+          var list = getFocusUsageWindow();
+          list.push(Date.now());
+          localStorage.setItem(FOCUS_USAGE_KEY, JSON.stringify(list));
+        }
+
+        function getSleepAlarmLimitState() {
+          try {
+            var raw = localStorage.getItem(SLEEP_ALARM_LIMIT_KEY);
+            var parsed = raw ? JSON.parse(raw) : null;
+            var now = Date.now();
+            if (!parsed || typeof parsed.createdAt !== "number") {
+              return { canCreate: true, remainingMs: 0 };
+            }
+            var elapsed = now - parsed.createdAt;
+            var remaining = Math.max(0, 24 * 60 * 60 * 1000 - elapsed);
+            return { canCreate: remaining <= 0, remainingMs: remaining };
+          } catch (e) {
+            return { canCreate: true, remainingMs: 0 };
+          }
+        }
+
+        function fmt(secs) {
+          var m = Math.floor(secs / 60);
+          var s = secs % 60;
+          return (m < 10 ? "0" : "") + m + ":" + (s < 10 ? "0" : "") + s;
+        }
+
+        function nowLabel() {
+          var d = new Date();
+          return d.toLocaleString("es-CO", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+          });
+        }
+
+        function itemSessionsCompleted(item) {
+          if (!item || typeof item !== "object") {
+            return 0;
+          }
+          if (typeof item.sessions === "number" && item.sessions > 0) {
+            return item.sessions;
+          }
+          var sec = typeof item.seconds === "number" ? item.seconds : 0;
+          if (sec > 0) {
+            return Math.floor(sec / targetSeconds);
+          }
+          return 0;
+        }
+
+        function getScores() {
+          try {
+            var raw = localStorage.getItem(STORAGE_KEY);
+            var parsed = raw ? JSON.parse(raw) : [];
+            return Array.isArray(parsed) ? parsed : [];
+          } catch (e) {
+            return [];
+          }
+        }
+
+        function getPlannedGoal() {
+          try {
+            var raw = localStorage.getItem(STORAGE_PLAN_KEY);
+            var num = Number(raw);
+            return Number.isFinite(num) ? Math.max(1, Math.min(24, Math.floor(num))) : 3;
+          } catch (e) {
+            return 3;
+          }
+        }
+
+        function savePlannedGoal(n) {
+          localStorage.setItem(STORAGE_PLAN_KEY, String(n));
+        }
+
+        function saveScores(scores) {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(scores));
+        }
+
+        function renderScores() {
+          var scores = getScores();
+          var total = 0;
+          focusScores.innerHTML = "";
+
+          if (!scores.length) {
+            focusScores.innerHTML = '<li class="focus-history__empty">Aún no hay sesiones guardadas.</li>';
+            focusTotal.textContent = "Total: 0 sesiones";
+            return;
+          }
+
+          scores.forEach(function (item, index) {
+            var n = itemSessionsCompleted(item);
+            total += n;
+            var li = document.createElement("li");
+            li.className = "focus-history__item";
+            var strongTxt;
+            if (n === 0 && typeof item.seconds === "number" && typeof item.sessions !== "number") {
+              strongTxt = "Legado • " + fmt(item.seconds);
+            } else {
+              strongTxt = n + (n === 1 ? " sesión" : " sesiones");
+            }
+            li.innerHTML = '<span>#' + (scores.length - index) + " • " + item.date + "</span><strong>" + strongTxt + "</strong>";
+            focusScores.appendChild(li);
+          });
+
+          focusTotal.textContent = "Total: " + total + (total === 1 ? " sesión" : " sesiones");
+        }
+
+        function secondsInCurrentPomodoro() {
+          if (elapsedSeconds <= 0) {
+            return 0;
+          }
+          var r = elapsedSeconds % targetSeconds;
+          return r === 0 ? targetSeconds : r;
+        }
+
+        function completedPomodorosCount() {
+          return Math.floor(elapsedSeconds / targetSeconds);
+        }
+
+        function setTargetLabel() {
+          focusTargetLabel.textContent =
+            "Pomodoro: " + fmt(targetSeconds) + " · Plan: " + plannedSessionGoal + " sesiones";
+        }
+
+        function setProgressRing() {
+          var progress = 0;
+          if (targetSeconds > 0) {
+            var remainder = elapsedSeconds % targetSeconds;
+            if (elapsedSeconds > 0 && remainder === 0) {
+              progress = 1;
+            } else {
+              progress = remainder / targetSeconds;
+            }
+          }
+          var degrees = Math.round(progress * 360);
+          focusRing.style.setProperty("--progress-deg", degrees + "deg");
+        }
+
+        function stopTimer() {
+          if (focusTimer) {
+            clearInterval(focusTimer);
+            focusTimer = null;
+          }
+          running = false;
+          btnIniciar.textContent = "Iniciar";
+        }
+
+        function resetStopwatch() {
+          stopTimer();
+          elapsedSeconds = 0;
+          focusDisplay.textContent = "00:00";
+          setProgressRing();
+          focusStatus.textContent = "Cronómetro reiniciado.";
+        }
+
+        function saveCurrentSession() {
+          var done = completedPomodorosCount();
+          if (done <= 0) {
+            focusStatus.textContent =
+              "Aún no has completado ningún Pomodoro (25 min). Sigue enfocado o guarda después de una sesión completa.";
+            return;
+          }
+          var scores = getScores();
+          scores.unshift({
+            sessions: done,
+            date: nowLabel(),
+          });
+          saveScores(scores.slice(0, 30));
+          elapsedSeconds = 0;
+          focusDisplay.textContent = "00:00";
+          setProgressRing();
+          renderScores();
+          focusStatus.textContent = "Guardadas " + done + (done === 1 ? " sesión" : " sesiones") + " Pomodoro correctamente.";
+        }
+
+        function applyTarget() {
+          var n = Number(inputPomodoroSessions.value);
+          if (!Number.isFinite(n)) {
+            n = 3;
+          }
+          var maxAllowed = isPremiumPlan() ? 24 : 3;
+          n = Math.max(1, Math.min(maxAllowed, Math.floor(n)));
+          inputPomodoroSessions.value = String(n);
+          plannedSessionGoal = n;
+          savePlannedGoal(n);
+          targetSeconds = 25 * 60;
+          setTargetLabel();
+          setProgressRing();
+          focusStatus.textContent = "Plan actualizado: " + n + " sesiones Pomodoro de " + fmt(targetSeconds) + " cada una.";
+        }
+
+        function openCustomize() {
+          inputPomodoroSessions.value = String(plannedSessionGoal);
+          focusCustomize.removeAttribute("hidden");
+        }
+
+        function closeCustomize() {
+          focusCustomize.setAttribute("hidden", "");
+        }
+
+        plannedSessionGoal = getPlannedGoal();
+        if (!isPremiumPlan() && plannedSessionGoal > 3) {
+          plannedSessionGoal = 3;
+          savePlannedGoal(3);
+        }
+        inputPomodoroSessions.value = String(plannedSessionGoal);
+        focusDisplay.textContent = "00:00";
+        setTargetLabel();
+        setProgressRing();
+        renderScores();
+
+        btnIniciar.addEventListener("click", function () {
+          if (!running) {
+            if (!isPremiumPlan() && getAvailableFocusSessions() <= 0) {
+              focusStatus.textContent = "Limite alcanzado: ya usaste 3 sesiones en las ultimas 24 horas. Activa Premium para sesiones ilimitadas.";
+              return;
+            }
+            running = true;
+            notifiedFocusLimit = false;
+            btnIniciar.textContent = "Pausar";
+            focusStatus.textContent = "Sesión en curso...";
+            focusTimer = setInterval(function () {
+              elapsedSeconds += 1;
+              focusDisplay.textContent = fmt(secondsInCurrentPomodoro());
+              setProgressRing();
+              var prevDone = Math.floor((elapsedSeconds - 1) / targetSeconds);
+              var done = completedPomodorosCount();
+              if (done > prevDone) {
+                  playSelectedAlarmTone((focusToneSelect && focusToneSelect.value) || ALARM_TONES[0].id);
+                  var shouldRenderDefaultDoneMsg = true;
+                if (!isPremiumPlan()) {
+                  registerFocusSessionUsage();
+                  var remainingFree = getAvailableFocusSessions();
+                  if (remainingFree <= 0) {
+                    stopTimer();
+                    focusStatus.textContent = "Completaste tu limite gratis de 3 sesiones por 24 horas. Vuelve mas tarde o activa Premium.";
+                    return;
+                  }
+                  if (!notifiedFocusLimit) {
+                    notifiedFocusLimit = true;
+                    focusStatus.textContent = "Sesion completada. Te quedan " + remainingFree + " sesiones gratis en esta ventana de 24 horas.";
+                      shouldRenderDefaultDoneMsg = false;
+                  }
+                }
+                  if (shouldRenderDefaultDoneMsg) {
+                    if (plannedSessionGoal >= 1 && done <= plannedSessionGoal) {
+                      focusStatus.textContent =
+                        "¡Pomodoro " + done + " de " + plannedSessionGoal + " completado! Puedes continuar o usar Finalizar y guardar.";
+                    } else {
+                      focusStatus.textContent =
+                        "¡Pomodoro " + done + " completado! Continúa si quieres o guarda tus puntuaciones.";
+                    }
+                  }
+              }
+            }, 1000);
+          } else {
+            stopTimer();
+            focusStatus.textContent = "Cronómetro en pausa.";
+          }
+        });
+
+        btnGuardar.addEventListener("click", function () {
+          stopTimer();
+          saveCurrentSession();
+        });
+
+        btnReiniciar.addEventListener("click", function () {
+          resetStopwatch();
+        });
+
+        btnLimpiarHistorial.addEventListener("click", function () {
+          localStorage.removeItem(STORAGE_KEY);
+          renderScores();
+          focusStatus.textContent = "Puntuaciones eliminadas.";
+        });
+
+        btnPersonalizar.addEventListener("click", function () {
+          openCustomize();
+        });
+
+        btnAplicarObjetivo.addEventListener("click", function () {
+          applyTarget();
+          closeCustomize();
+        });
+
+        btnCerrarPersonalizar.addEventListener("click", function () {
+          closeCustomize();
+        });
+
+        focusModalBackdrop.addEventListener("click", function () {
+          closeCustomize();
+        });
+
+        document.addEventListener("keydown", function (event) {
+          if (event.key === "Escape") {
+            closeCustomize();
+          }
+        });
+
+        /* Dashboard Perfil */
+        var profileEditModal = document.getElementById("profileEditModal");
+        var profileEditBackdrop = document.getElementById("profileEditBackdrop");
+        var btnEditProfile = document.getElementById("btnEditProfile");
+        var btnCloseProfileEdit = document.getElementById("btnCloseProfileEdit");
+        var btnSaveProfile = document.getElementById("btnSaveProfile");
+        var btnCancelProfileEdit = document.getElementById("btnCancelProfileEdit");
+        var profileNameInput = document.getElementById("profileNameInput");
+        var profileEmailInput = document.getElementById("profileEmailInput");
+        var profileCityInput = document.getElementById("profileCityInput");
+        var profileDisplayName = document.getElementById("profileDisplayName");
+        var profileDisplayEmail = document.getElementById("profileDisplayEmail");
+        var profileDisplayCity = document.getElementById("profileDisplayCity");
+        var profilePlanBadge = document.getElementById("profilePlanBadge");
+        var profileSinceDate = document.getElementById("profileSinceDate");
+        var profileFocusToday = document.getElementById("profileFocusToday");
+        var headerUserPills = Array.prototype.slice.call(document.querySelectorAll("[data-header-user]"));
+        var btnOpenPremiumModal = document.getElementById("btnOpenPremiumModal");
+        var premiumPlanModal = document.getElementById("premiumPlanModal");
+        var premiumModalBackdrop = document.getElementById("premiumModalBackdrop");
+        var btnClosePremiumModal = document.getElementById("btnClosePremiumModal");
+        var btnPremiumTrial = document.getElementById("btnPremiumTrial");
+        var premiumPlanCardEl = premiumPlanModal.querySelector(".premium-plan-card");
+        var premiumCheckoutModal = document.getElementById("premiumCheckoutModal");
+        var premiumCheckoutBackdrop = document.getElementById("premiumCheckoutBackdrop");
+        var btnClosePremiumCheckout = document.getElementById("btnClosePremiumCheckout");
+        var btnCancelPremiumCheckout = document.getElementById("btnCancelPremiumCheckout");
+        var formPremiumCheckout = document.getElementById("formPremiumCheckout");
+
+        function getProfileData() {
+          try {
+            var raw = localStorage.getItem(PROFILE_STORAGE_KEY);
+            var o = raw ? JSON.parse(raw) : {};
+            return {
+              name: typeof o.name === "string" ? o.name : "",
+              email: typeof o.email === "string" ? o.email : "",
+              city: typeof o.city === "string" ? o.city : "",
+            };
+          } catch (e) {
+            return { name: "", email: "", city: "" };
+          }
+        }
+
+        function saveProfileData(data) {
+          localStorage.setItem(PROFILE_STORAGE_KEY, JSON.stringify(data));
+        }
+
+        function renderProfileView() {
+          var d = getProfileData();
+          var displayName = (d.name || "").trim() || "Tu nombre";
+          profileDisplayName.textContent = displayName;
+          headerUserPills.forEach(function (pill) {
+            pill.textContent = displayName;
+          });
+          var emailLine = (d.email || "").trim();
+          var cityLine = (d.city || "").trim();
+          profileDisplayEmail.textContent = emailLine;
+          if (cityLine) {
+            profileDisplayCity.textContent = cityLine;
+            profileDisplayCity.removeAttribute("hidden");
+          } else {
+            profileDisplayCity.textContent = "";
+            profileDisplayCity.setAttribute("hidden", "");
+          }
+          var plan = getPlanTier();
+          profilePlanBadge.textContent = plan === "premium" ? "Premium" : "Normal";
+          profilePlanBadge.classList.toggle("plan-badge--premium", plan === "premium");
+          profilePlanBadge.classList.toggle("plan-badge--normal", plan !== "premium");
+          if (profileSinceDate) {
+            var sessionRaw = localStorage.getItem(SESSION_AUTH_KEY);
+            var session = null;
+            try {
+              session = sessionRaw ? JSON.parse(sessionRaw) : null;
+            } catch (e) {
+              session = null;
+            }
+            var sinceDate = session && typeof session.at === "number" ? new Date(session.at) : new Date();
+            profileSinceDate.textContent = sinceDate.toLocaleDateString("es-CO");
+          }
+          if (profileFocusToday) {
+            profileFocusToday.textContent = String(getFocusUsageWindow().length);
+          }
+          btnOpenPremiumModal.textContent = plan === "premium" ? "Ver beneficios Premium" : "Ver plan Premium";
+          premiumPlanCardEl.classList.toggle("is-premium-active", plan === "premium");
+          btnPremiumTrial.disabled = plan === "premium";
+          btnPremiumTrial.textContent = plan === "premium" ? "Ya tienes Premium" : "Probar premium";
+          refreshPremiumAccessNotices();
+          refreshProCitaFab();
+        }
+
+        function openProfileEditModal() {
+          var d = getProfileData();
+          profileNameInput.value = d.name || "";
+          profileEmailInput.value = d.email || "";
+          profileCityInput.value = d.city || "";
+          profileEditModal.removeAttribute("hidden");
+        }
+
+        function closeProfileEditModal() {
+          profileEditModal.setAttribute("hidden", "");
+        }
+
+        function openPremiumModalFn() {
+          renderProfileView();
+          premiumPlanModal.removeAttribute("hidden");
+        }
+
+        function closePremiumModalFn() {
+          premiumPlanModal.setAttribute("hidden", "");
+          closePremiumCheckoutModal();
+        }
+
+        function openPremiumCheckoutModal() {
+          premiumCheckoutModal.removeAttribute("hidden");
+        }
+
+        function closePremiumCheckoutModal() {
+          premiumCheckoutModal.setAttribute("hidden", "");
+        }
+
+        function applyPremiumUpgradeFromCheckout() {
+          savePlanTier("premium");
+          try {
+            var rawSession = localStorage.getItem(SESSION_AUTH_KEY);
+            var sessionObj = rawSession ? JSON.parse(rawSession) : null;
+            var uid = sessionObj && sessionObj.userId != null ? Number(sessionObj.userId) : NaN;
+            if (!isNaN(uid) && window.NeuronestUsersJson) {
+              window.NeuronestUsersJson
+                .updateUserInPersistence(uid, { tipo_plan: "premium" })
+                .catch(function () {});
+            }
+          } catch (e) {}
+          renderProfileView();
+          closePremiumModalFn();
+        }
+
+        btnEditProfile.addEventListener("click", openProfileEditModal);
+        btnCloseProfileEdit.addEventListener("click", closeProfileEditModal);
+        btnCancelProfileEdit.addEventListener("click", closeProfileEditModal);
+        profileEditBackdrop.addEventListener("click", closeProfileEditModal);
+        btnSaveProfile.addEventListener("click", function () {
+          var data = {
+            name: profileNameInput.value.trim(),
+            email: profileEmailInput.value.trim(),
+            city: profileCityInput.value.trim(),
+          };
+          saveProfileData(data);
+          try {
+            var rawSession = localStorage.getItem(SESSION_AUTH_KEY);
+            var sessionObj = rawSession ? JSON.parse(rawSession) : null;
+            var uid = sessionObj && sessionObj.userId != null ? Number(sessionObj.userId) : NaN;
+            if (!isNaN(uid) && window.NeuronestUsersJson) {
+              var emailNorm = (data.email || "").trim().toLowerCase();
+              window.NeuronestUsersJson
+                .updateUserInPersistence(uid, {
+                  nombre: data.name,
+                  email: emailNorm || data.email,
+                  ciudad: data.city,
+                })
+                .catch(function () {});
+            }
+          } catch (e) {}
+          renderProfileView();
+          closeProfileEditModal();
+        });
+
+        btnOpenPremiumModal.addEventListener("click", openPremiumModalFn);
+        btnClosePremiumModal.addEventListener("click", closePremiumModalFn);
+        premiumModalBackdrop.addEventListener("click", closePremiumModalFn);
+        btnPremiumTrial.addEventListener("click", function () {
+          if (getPlanTier() === "premium") {
+            return;
+          }
+          openPremiumCheckoutModal();
+        });
+
+        btnClosePremiumCheckout.addEventListener("click", closePremiumCheckoutModal);
+        btnCancelPremiumCheckout.addEventListener("click", closePremiumCheckoutModal);
+        premiumCheckoutBackdrop.addEventListener("click", closePremiumCheckoutModal);
+
+        formPremiumCheckout.addEventListener("submit", function (event) {
+          event.preventDefault();
+          if (getPlanTier() === "premium") {
+            closePremiumCheckoutModal();
+            return;
+          }
+          var name = (document.getElementById("premiumCardName").value || "").trim();
+          var num = (document.getElementById("premiumCardNumber").value || "").replace(/\s+/g, "");
+          var exp = (document.getElementById("premiumCardExpiry").value || "").trim();
+          var cvv = (document.getElementById("premiumCardCvv").value || "").trim();
+          if (!name || !num || !exp || !cvv) {
+            alert("Completa todos los datos de pago para continuar.");
+            return;
+          }
+          applyPremiumUpgradeFromCheckout();
+        });
+
+        /* Citas con profesionales (solo Premium; reservas compartidas entre cuentas en este navegador) */
+        var PRO_CITA_LABOR_HOURS = [9, 10, 11, 12, 14, 15, 16, 17];
+        var PRO_CITA_PROFESSIONALS = [
+          { id: "p1", name: "Profesional 1", specialty: "N1" },
+          { id: "p2", name: "Profesional 2", specialty: "N2" },
+          { id: "p3", name: "Profeisonal 3", specialty: "N3" },
+          { id: "p4", name: "Profesionl 4", specialty: "N3" },
+        ];
+        var proCitaWeekOffset = 0;
+        var proCitaSelectedProId = PRO_CITA_PROFESSIONALS[0].id;
+        var btnProCitaFab = document.getElementById("btnProCitaFab");
+        var proCitaModal = document.getElementById("proCitaModal");
+        var proCitaBackdrop = document.getElementById("proCitaBackdrop");
+        var btnCloseProCita = document.getElementById("btnCloseProCita");
+        var proCitaProButtons = document.getElementById("proCitaProButtons");
+        var proCitaProHint = document.getElementById("proCitaProHint");
+        var proCitaWeekLabel = document.getElementById("proCitaWeekLabel");
+        var proCitaGridHost = document.getElementById("proCitaGridHost");
+        var btnProCitaPrevWeek = document.getElementById("btnProCitaPrevWeek");
+        var btnProCitaNextWeek = document.getElementById("btnProCitaNextWeek");
+
+        function getSessionUserIdStr() {
+          try {
+            var raw = localStorage.getItem(SESSION_AUTH_KEY);
+            var o = raw ? JSON.parse(raw) : null;
+            if (o && o.userId != null) {
+              return String(o.userId);
+            }
+          } catch (e) {}
+          var em = (getProfileData().email || "").trim().toLowerCase();
+          return em || "local";
+        }
+
+        function getProBookings() {
+          try {
+            var raw = localStorage.getItem(PRO_BOOKINGS_KEY);
+            var a = raw ? JSON.parse(raw) : [];
+            return Array.isArray(a) ? a : [];
+          } catch (e) {
+            return [];
+          }
+        }
+
+        function setProBookings(list) {
+          localStorage.setItem(PRO_BOOKINGS_KEY, JSON.stringify(list));
+        }
+
+        function findProBooking(proId, dateStr, hour) {
+          return getProBookings().find(function (b) {
+            return b.proId === proId && b.date === dateStr && Number(b.hour) === Number(hour);
+          });
+        }
+
+        function startOfWeekMonday(refDate) {
+          var d = new Date(refDate);
+          d.setHours(0, 0, 0, 0);
+          var dow = d.getDay();
+          var diff = dow === 0 ? -6 : 1 - dow;
+          d.setDate(d.getDate() + diff);
+          return d;
+        }
+
+        function addDays(d, n) {
+          var x = new Date(d);
+          x.setDate(x.getDate() + n);
+          return x;
+        }
+
+        function formatLocalYmd(d) {
+          var y = d.getFullYear();
+          var m = String(d.getMonth() + 1).padStart(2, "0");
+          var day = String(d.getDate()).padStart(2, "0");
+          return y + "-" + m + "-" + day;
+        }
+
+        function isSlotPast(dateStr, hour) {
+          var p = dateStr.split("-");
+          var slotStart = new Date(Number(p[0]), Number(p[1]) - 1, Number(p[2]), hour, 0, 0, 0);
+          return slotStart.getTime() < Date.now();
+        }
+
+        function refreshProCitaFab() {
+          if (!btnProCitaFab) {
+            return;
+          }
+          if (isPremiumPlan()) {
+            btnProCitaFab.removeAttribute("hidden");
+          } else {
+            btnProCitaFab.setAttribute("hidden", "");
+            if (proCitaModal) {
+              proCitaModal.setAttribute("hidden", "");
+            }
+          }
+        }
+
+        function openProCitaModal() {
+          if (!isPremiumPlan() || !proCitaModal) {
+            return;
+          }
+          proCitaModal.removeAttribute("hidden");
+          renderProCitaProTabs();
+          renderProCitaWeek();
+          renderProCitaGrid();
+        }
+
+        function closeProCitaModal() {
+          if (proCitaModal) {
+            proCitaModal.setAttribute("hidden", "");
+          }
+        }
+
+        function renderProCitaProTabs() {
+          if (!proCitaProButtons) {
+            return;
+          }
+          proCitaProButtons.innerHTML = "";
+          PRO_CITA_PROFESSIONALS.forEach(function (pro) {
+            var b = document.createElement("button");
+            b.type = "button";
+            b.className = "pro-cita-pro-btn" + (pro.id === proCitaSelectedProId ? " is-active" : "");
+            b.setAttribute("role", "tab");
+            b.setAttribute("aria-selected", pro.id === proCitaSelectedProId ? "true" : "false");
+            b.dataset.proId = pro.id;
+            b.innerHTML = "<strong>" + pro.name + "</strong><span>" + pro.specialty + "</span>";
+            b.addEventListener("click", function () {
+              proCitaSelectedProId = pro.id;
+              renderProCitaProTabs();
+              renderProCitaGrid();
+            });
+            proCitaProButtons.appendChild(b);
+          });
+          var active = PRO_CITA_PROFESSIONALS.find(function (p) {
+            return p.id === proCitaSelectedProId;
+          });
+          if (active && proCitaProHint) {
+            proCitaProHint.textContent = "Horario laboral: 9:00–12:00 y 14:00–17:00 (lun–vie). " + active.name;
+          }
+        }
+
+        function getProCitaWeekMonday() {
+          var base = startOfWeekMonday(new Date());
+          return addDays(base, proCitaWeekOffset * 7);
+        }
+
+        function renderProCitaWeek() {
+          if (!proCitaWeekLabel) {
+            return;
+          }
+          var mon = getProCitaWeekMonday();
+          var fri = addDays(mon, 4);
+          var opts = { day: "numeric", month: "short" };
+          proCitaWeekLabel.textContent =
+            mon.toLocaleDateString("es-CO", Object.assign({ weekday: "short" }, opts)) +
+            " – " +
+            fri.toLocaleDateString("es-CO", Object.assign({ weekday: "short" }, opts)) +
+            " · " +
+            mon.getFullYear();
+        }
+
+        function renderProCitaGrid() {
+          if (!proCitaGridHost) {
+            return;
+          }
+          var mon = getProCitaWeekMonday();
+          var days = [];
+          for (var d = 0; d < 5; d++) {
+            days.push(addDays(mon, d));
+          }
+          var myId = getSessionUserIdStr();
+
+          var table = document.createElement("table");
+          table.className = "pro-cita-table";
+          var thead = document.createElement("thead");
+          var trh = document.createElement("tr");
+          var corner = document.createElement("th");
+          corner.className = "pro-cita-table__corner";
+          corner.textContent = "Hora";
+          trh.appendChild(corner);
+          days.forEach(function (dt) {
+            var th = document.createElement("th");
+            th.className = "pro-cita-table__day";
+            th.innerHTML =
+              "<span class=\"pro-cita-table__dow\">" +
+              dt.toLocaleDateString("es-CO", { weekday: "short" }) +
+              "</span><span class=\"pro-cita-table__dm\">" +
+              dt.toLocaleDateString("es-CO", { day: "2-digit", month: "2-digit" }) +
+              "</span>";
+            trh.appendChild(th);
+          });
+          thead.appendChild(trh);
+          table.appendChild(thead);
+
+          var tbody = document.createElement("tbody");
+          PRO_CITA_LABOR_HOURS.forEach(function (hour) {
+            var tr = document.createElement("tr");
+            var thc = document.createElement("th");
+            thc.className = "pro-cita-table__hour";
+            thc.textContent = String(hour).padStart(2, "0") + ":00";
+            tr.appendChild(thc);
+            days.forEach(function (dt) {
+              var dateStr = formatLocalYmd(dt);
+              var td = document.createElement("td");
+              var booking = findProBooking(proCitaSelectedProId, dateStr, hour);
+              var past = isSlotPast(dateStr, hour);
+              var btn = document.createElement("button");
+              btn.type = "button";
+              btn.className = "pro-cita-slot";
+              btn.dataset.proId = proCitaSelectedProId;
+              btn.dataset.date = dateStr;
+              btn.dataset.hour = String(hour);
+
+              if (past) {
+                btn.classList.add("pro-cita-slot--past");
+                btn.disabled = true;
+                btn.textContent = "—";
+                btn.title = "Horario pasado";
+              } else if (booking) {
+                if (booking.userId === myId) {
+                  btn.classList.add("pro-cita-slot--mine");
+                  btn.textContent = "Tu cita";
+                  btn.title = "Tu reserva";
+                } else {
+                  btn.classList.add("pro-cita-slot--busy");
+                  btn.disabled = true;
+                  btn.textContent = "Ocupado";
+                  btn.title = "Esta hora ya está reservada por otro usuario";
+                }
+              } else {
+                btn.classList.add("pro-cita-slot--free");
+                btn.textContent = "Disponible";
+                btn.title = "Reservar este horario";
+              }
+              td.appendChild(btn);
+              tr.appendChild(td);
+            });
+            tbody.appendChild(tr);
+          });
+          table.appendChild(tbody);
+          proCitaGridHost.innerHTML = "";
+          proCitaGridHost.appendChild(table);
+        }
+
+        proCitaGridHost.addEventListener("click", function (ev) {
+          var btn = ev.target && ev.target.closest(".pro-cita-slot");
+          if (!btn || btn.disabled || !btn.classList.contains("pro-cita-slot--free")) {
+            return;
+          }
+          if (!isPremiumPlan()) {
+            return;
+          }
+          var proId = btn.dataset.proId;
+          var dateStr = btn.dataset.date;
+          var hour = Number(btn.dataset.hour);
+          var myId = getSessionUserIdStr();
+          var again = findProBooking(proId, dateStr, hour);
+          if (again && again.userId !== myId) {
+            alert("Esta hora ya está ocupada. Elige otro horario.");
+            renderProCitaGrid();
+            return;
+          }
+          var label = (getProfileData().name || "").trim() || (getProfileData().email || "").trim() || "Usuario";
+          var list = getProBookings().slice();
+          list.push({
+            proId: proId,
+            date: dateStr,
+            hour: hour,
+            userId: myId,
+            userLabel: label,
+            bookedAt: Date.now(),
+          });
+          setProBookings(list);
+          alert("Cita agendada: " + dateStr + " a las " + String(hour).padStart(2, "0") + ":00.");
+          renderProCitaGrid();
+        });
+
+        if (btnProCitaFab) {
+          btnProCitaFab.addEventListener("click", openProCitaModal);
+        }
+        if (btnCloseProCita) {
+          btnCloseProCita.addEventListener("click", closeProCitaModal);
+        }
+        if (proCitaBackdrop) {
+          proCitaBackdrop.addEventListener("click", closeProCitaModal);
+        }
+        if (btnProCitaPrevWeek) {
+          btnProCitaPrevWeek.addEventListener("click", function () {
+            proCitaWeekOffset -= 1;
+            renderProCitaWeek();
+            renderProCitaGrid();
+          });
+        }
+        if (btnProCitaNextWeek) {
+          btnProCitaNextWeek.addEventListener("click", function () {
+            proCitaWeekOffset += 1;
+            renderProCitaWeek();
+            renderProCitaGrid();
+          });
+        }
+
+        document.getElementById("btnLogout").addEventListener("click", function () {
+          neuronestClearAllStorage();
+          window.location.href = "index.html";
+        });
+
+        renderProfileView();
+
+        /* Dashboard de Descanso */
+        var btnOpenStretches = document.getElementById("btnOpenStretches");
+        var stretchModal = document.getElementById("stretchModal");
+        var stretchModalBackdrop = document.getElementById("stretchModalBackdrop");
+        var btnCloseStretchModal = document.getElementById("btnCloseStretchModal");
+        var stretchOptions = document.getElementById("stretchOptions");
+        var stretchMainGif = document.getElementById("stretchMainGif");
+        var stretchMinutesInput = document.getElementById("stretchMinutesInput");
+        var stretchSecondsInput = document.getElementById("stretchSecondsInput");
+        var stretchToneSelect = document.getElementById("stretchToneSelect");
+        var btnPreviewStretchTone = document.getElementById("btnPreviewStretchTone");
+        var btnStopStretchTone = document.getElementById("btnStopStretchTone");
+        var stretchCountdown = document.getElementById("stretchCountdown");
+        var btnStartStretchTimer = document.getElementById("btnStartStretchTimer");
+        var btnResetStretchTimer = document.getElementById("btnResetStretchTimer");
+        var stretchTimerId = null;
+        var stretchRemainingSeconds = 120;
+        var stretchRunning = false;
+        var stretches = [
+          { gif: "img/Cobras.gif" },
+          { gif: "img/Lunge.gif" },
+          { gif: "img/" + encodeURIComponent("Seated abs circles.gif") },
+          { gif: "img/" + encodeURIComponent("Shoulder Stretch.gif") },
+        ];
+
+        function formatCountdown(totalSeconds) {
+          var minutes = Math.floor(totalSeconds / 60);
+          var seconds = totalSeconds % 60;
+          return String(minutes).padStart(2, "0") + ":" + String(seconds).padStart(2, "0");
+        }
+
+        function refreshStretchDisplay() {
+          stretchCountdown.textContent = formatCountdown(stretchRemainingSeconds);
+        }
+
+        function applyStretchDurationFromInputs() {
+          var minutes = Math.max(0, Math.min(59, Number(stretchMinutesInput.value) || 0));
+          var seconds = Math.max(0, Math.min(59, Number(stretchSecondsInput.value) || 0));
+          stretchMinutesInput.value = String(minutes);
+          stretchSecondsInput.value = String(seconds).padStart(2, "0");
+          stretchRemainingSeconds = minutes * 60 + seconds;
+          refreshStretchDisplay();
+        }
+
+        function stopStretchTimer() {
+          if (stretchTimerId) {
+            clearInterval(stretchTimerId);
+            stretchTimerId = null;
+          }
+          stretchRunning = false;
+          btnStartStretchTimer.textContent = "Iniciar";
+        }
+
+        function openStretchModal() {
+          stretchModal.removeAttribute("hidden");
+        }
+
+        function closeStretchModal() {
+          stretchModal.setAttribute("hidden", "");
+        }
+
+        function renderStretchOptions() {
+          stretchOptions.innerHTML = "";
+          stretches.forEach(function (item) {
+            var card = document.createElement("button");
+            card.type = "button";
+            card.className = "stretch-option";
+            card.innerHTML = '<img src="' + item.gif + '" alt="">';
+            card.addEventListener("click", function () {
+              stretchMainGif.src = item.gif;
+              stretchMainGif.alt = "";
+              closeStretchModal();
+            });
+            stretchOptions.appendChild(card);
+          });
+        }
+
+        btnOpenStretches.addEventListener("click", function () {
+          if (!isPremiumPlan()) {
+            alert("La pausa activa es una funcion Premium. Activa Premium para usarla sin limites.");
+            return;
+          }
+          renderStretchOptions();
+          openStretchModal();
+        });
+
+        btnStartStretchTimer.addEventListener("click", function () {
+          if (!isPremiumPlan()) {
+            alert("El temporizador de pausa activa esta disponible solo en Premium.");
+            return;
+          }
+          if (stretchRemainingSeconds <= 0) {
+            applyStretchDurationFromInputs();
+          }
+          if (!stretchRunning) {
+            stretchRunning = true;
+            btnStartStretchTimer.textContent = "Pausar";
+            stretchTimerId = setInterval(function () {
+              if (stretchRemainingSeconds > 0) {
+                stretchRemainingSeconds -= 1;
+                refreshStretchDisplay();
+              } else {
+                stopStretchTimer();
+                playSelectedAlarmTone((stretchToneSelect && stretchToneSelect.value) || ALARM_TONES[0].id);
+                alert("NeuroNest: terminaste tu estiramiento.");
+              }
+            }, 1000);
+          } else {
+            stopStretchTimer();
+          }
+        });
+
+        btnResetStretchTimer.addEventListener("click", function () {
+          stopStretchTimer();
+          applyStretchDurationFromInputs();
+        });
+
+        function syncStretchInputsLive() {
+          if (stretchRunning) {
+            return;
+          }
+          applyStretchDurationFromInputs();
+        }
+
+        stretchMinutesInput.addEventListener("input", syncStretchInputsLive);
+        stretchSecondsInput.addEventListener("input", syncStretchInputsLive);
+        stretchMinutesInput.addEventListener("change", syncStretchInputsLive);
+        stretchSecondsInput.addEventListener("change", syncStretchInputsLive);
+
+        btnCloseStretchModal.addEventListener("click", closeStretchModal);
+        stretchModalBackdrop.addEventListener("click", closeStretchModal);
+        refreshStretchDisplay();
+
+        /* Dashboard de Sueno */
+        var btnVerSugerencias = document.getElementById("btnVerSugerencias");
+        var btnRegistrarHora = document.getElementById("btnRegistrarHora");
+        var sleepSuggestionsModal = document.getElementById("sleepSuggestionsModal");
+        var sleepManualModal = document.getElementById("sleepManualModal");
+        var sleepSuggestionsBackdrop = document.getElementById("sleepSuggestionsBackdrop");
+        var sleepManualBackdrop = document.getElementById("sleepManualBackdrop");
+        var btnCloseSleepSuggestions = document.getElementById("btnCloseSleepSuggestions");
+        var btnCloseSleepManual = document.getElementById("btnCloseSleepManual");
+        var sleepSuggestions = document.getElementById("sleepSuggestions");
+        var sleepSelectedSource = document.getElementById("sleepSelectedSource");
+        var sleepBedClock = document.getElementById("sleepBedClock");
+        var sleepBedClockPeriod = document.getElementById("sleepBedClockPeriod");
+        var sleepWakeClock = document.getElementById("sleepWakeClock");
+        var sleepWakeClockPeriod = document.getElementById("sleepWakeClockPeriod");
+        var sleepAlarmStatus = document.getElementById("sleepAlarmStatus");
+        var sleepAlarmList = document.getElementById("sleepAlarmList");
+        var sleepAlarmCount = document.getElementById("sleepAlarmCount");
+        var btnSleepClearAll = document.getElementById("btnSleepClearAll");
+        var sleepBedHour = document.getElementById("sleepBedHour");
+        var sleepBedMinute = document.getElementById("sleepBedMinute");
+        var sleepBedPeriod = document.getElementById("sleepBedPeriod");
+        var sleepWakeHour = document.getElementById("sleepWakeHour");
+        var sleepWakeMinute = document.getElementById("sleepWakeMinute");
+        var sleepWakePeriod = document.getElementById("sleepWakePeriod");
+        var sleepToneSelect = document.getElementById("sleepToneSelect");
+        var btnPreviewSleepTone = document.getElementById("btnPreviewSleepTone");
+        var btnStopSleepTone = document.getElementById("btnStopSleepTone");
+        //var sleepAlarmToneInput = document.getElementById("sleepAlarmToneInput");
+        var btnGuardarHorarioManual = document.getElementById("btnGuardarHorarioManual");
+        var btnPlaySleepAudio = document.getElementById("btnPlaySleepAudio");
+        var sleepAudio = document.getElementById("sleepAudio");
+        var ALARM_TONES = [
+          { id: "alarma", label: "⏱ Brisa", baseName: "Alarma" },
+          { id: "alarma1", label: "⏱ Aurora", baseName: "Alarma1" },
+          { id: "alarma2", label: "⏱ Pulso", baseName: "Alarma2" },
+          { id: "alarma3", label: "⏱ Zen", baseName: "Alarma3" },
+          { id: "alarma4", label: "⏱ Ritmo", baseName: "Alarma4" },
+        ];
+        var alarmNowBar = document.getElementById("alarmNowBar");
+        var alarmNowTitle = document.getElementById("alarmNowTitle");
+        var alarmNowLabel = document.getElementById("alarmNowLabel");
+        var btnStopActiveAlarm = document.getElementById("btnStopActiveAlarm");
+        var activeAlarmAudio = null;
+        var sleepPresets = [
+          { bed: "09:30 PM", wake: "05:30 AM", source: "Plan 1" },
+          { bed: "10:00 PM", wake: "06:00 AM", source: "Plan 2" },
+          { bed: "10:30 PM", wake: "06:30 AM", source: "Plan 3" },
+          { bed: "11:00 PM", wake: "07:00 AM", source: "Plan 4" },
+          { bed: "11:30 PM", wake: "07:30 AM", source: "Plan 5" },
+        ];
+        var sleepAlarms = [];
+        var selectedSleepAlarmId = null;
+        var sleepAlarmTimers = [];
+        var sleepEditTargetId = null;
+
+        function normalizeTimeLabel(timeLabel) {
+          var parts = (timeLabel || "").trim().split(" ");
+          var hm = (parts[0] || "12:00").split(":");
+          var hour = Math.max(1, Math.min(12, Number(hm[0]) || 12));
+          var minute = Math.max(0, Math.min(59, Number(hm[1]) || 0));
+          var period = parts[1] === "PM" ? "PM" : "AM";
+          return String(hour).padStart(2, "0") + ":" + String(minute).padStart(2, "0") + " " + period;
+        }
+
+        function parseTimeParts(timeLabel) {
+          var normalized = normalizeTimeLabel(timeLabel);
+          var parts = normalized.split(" ");
+          var hm = parts[0].split(":");
+          return {
+            label: parts[0],
+            hour: Number(hm[0]),
+            minute: Number(hm[1]),
+            period: parts[1],
+          };
+        }
+
+        function formatManualTime(hourInput, minuteInput, periodInput) {
+          var hour = Math.max(1, Math.min(12, Number(hourInput.value) || 12));
+          var minute = Math.max(0, Math.min(59, Number(minuteInput.value) || 0));
+          hourInput.value = String(hour);
+          minuteInput.value = String(minute).padStart(2, "0");
+          return String(hour).padStart(2, "0") + ":" + String(minute).padStart(2, "0") + " " + periodInput.value;
+        }
+
+        function to24Hour(hour, period) {
+          var h = hour % 12;
+          if (period === "PM") {
+            h += 12;
+          }
+          return h;
+        }
+
+        function nextDateFromTimeLabel(timeLabel) {
+          var parts = parseTimeParts(timeLabel);
+          var now = new Date();
+          var next = new Date(now);
+          next.setSeconds(0, 0);
+          next.setHours(to24Hour(parts.hour, parts.period), parts.minute, 0, 0);
+          if (next <= now) {
+            next.setDate(next.getDate() + 1);
+          }
+          return next;
+        }
+
+        function getToneById(id) {
+          var tone = ALARM_TONES.find(function (item) {
+            return item.id === id;
+          });
+          return tone || ALARM_TONES[0];
+        }
+
+        function fillToneSelect(selectEl, selectedId) {
+          if (!selectEl) {
+            return;
+          }
+          selectEl.innerHTML = "";
+          ALARM_TONES.forEach(function (tone) {
+            var option = document.createElement("option");
+            option.value = tone.id;
+            option.textContent = tone.label;
+            option.selected = tone.id === selectedId;
+            selectEl.appendChild(option);
+          });
+        }
+
+        function playSelectedAlarmTone(toneId) {
+          stopActiveAlarmTone();
+          var tone = getToneById(toneId);
+          var candidates = [
+            "audio/" + tone.baseName + ".mp3",
+            "audio/" + tone.baseName + ".wav",
+            "audio/" + tone.baseName + ".ogg",
+            "audio/" + tone.baseName + ".m4a",
+          ];
+          var attempt = 0;
+          var audio = new Audio();
+          audio.preload = "auto";
+
+          function tryPlay() {
+            if (attempt >= candidates.length) {
+              alert("No se encontro el archivo de " + tone.label + " en la carpeta audio.");
+              return;
+            }
+            audio.src = candidates[attempt];
+            attempt += 1;
+            audio.loop = true;
+            audio.play().catch(function () {
+              tryPlay();
+            });
+          }
+
+          tryPlay();
+          activeAlarmAudio = audio;
+          if (alarmNowBar) {
+            alarmNowBar.removeAttribute("hidden");
+            alarmNowTitle.textContent = "⏱ Alarma activa";
+            alarmNowLabel.textContent = tone.label + " sonando en bucle.";
+          }
+        }
+
+        function stopActiveAlarmTone() {
+          if (activeAlarmAudio) {
+            activeAlarmAudio.pause();
+            activeAlarmAudio.currentTime = 0;
+            activeAlarmAudio = null;
+          }
+          if (alarmNowBar) {
+            alarmNowBar.setAttribute("hidden", "");
+          }
+        }
+
+        function openSleepSuggestionsModal() {
+          sleepSuggestionsModal.removeAttribute("hidden");
+        }
+
+        function closeSleepSuggestionsModal() {
+          sleepSuggestionsModal.setAttribute("hidden", "");
+        }
+
+        function openSleepManualModal() {
+          sleepManualModal.removeAttribute("hidden");
+        }
+
+        function closeSleepManualModal() {
+          sleepManualModal.setAttribute("hidden", "");
+          sleepEditTargetId = null;
+        }
+
+        function setSleepSummary(alarm) {
+          if (!alarm) {
+            sleepSelectedSource.textContent = "Sin configurar";
+            sleepBedClock.textContent = "--:--";
+            sleepBedClockPeriod.textContent = "--";
+            sleepWakeClock.textContent = "--:--";
+            sleepWakeClockPeriod.textContent = "--";
+            sleepAlarmStatus.textContent = "Alarma no programada.";
+            return;
+          }
+          var bed = parseTimeParts(alarm.bed);
+          var wake = parseTimeParts(alarm.wake);
+          sleepSelectedSource.textContent = alarm.source;
+          sleepBedClock.textContent = bed.label;
+          sleepBedClockPeriod.textContent = bed.period;
+          sleepWakeClock.textContent = wake.label;
+          sleepWakeClockPeriod.textContent = wake.period;
+          if (sleepToneSelect) {
+            sleepToneSelect.value = alarm.toneId || ALARM_TONES[0].id;
+          }
+          sleepAlarmStatus.textContent = "Tono seleccionado: " + getToneById(alarm.toneId).label + ".";
+        }
+
+        function cancelSleepTimers() {
+          sleepAlarmTimers.forEach(function (t) {
+            clearTimeout(t.id);
+          });
+          sleepAlarmTimers = [];
+        }
+
+        function scheduleSingleSleepTimer(alarm, key, label, type) {
+          var next = nextDateFromTimeLabel(label);
+          var delay = Math.max(0, next.getTime() - Date.now());
+          var timerId = setTimeout(function () {
+            playSelectedAlarmTone(alarm.toneId);
+            alert("NeuroNest: alarma de sueño (" + type + ") - " + label + ".");
+            scheduleSleepAlarms();
+          }, delay);
+          sleepAlarmTimers.push({ id: timerId, alarmId: alarm.id, key: key });
+          return next;
+        }
+
+        function scheduleSleepAlarms() {
+          cancelSleepTimers();
+          if (!sleepAlarms.length) {
+            sleepAlarmStatus.textContent = "Alarma no programada.";
+            return;
+          }
+          var nextGlobal = null;
+          sleepAlarms.forEach(function (alarm) {
+            var nextBed = scheduleSingleSleepTimer(alarm, "bed", alarm.bed, "dormir");
+            var nextWake = scheduleSingleSleepTimer(alarm, "wake", alarm.wake, "despertar");
+            [nextBed, nextWake].forEach(function (candidate) {
+              if (!nextGlobal || candidate < nextGlobal.date) {
+                nextGlobal = { date: candidate, alarm: alarm };
+              }
+            });
+          });
+          if (nextGlobal) {
+            sleepAlarmStatus.textContent = "Próxima alarma: " + nextGlobal.alarm.bed + " / " + nextGlobal.alarm.wake + ".";
+          }
+        }
+
+        function populateSleepForm(alarm) {
+          var bed = parseTimeParts(alarm.bed);
+          var wake = parseTimeParts(alarm.wake);
+          sleepBedHour.value = String(Number(bed.label.split(":")[0]));
+          sleepBedMinute.value = bed.label.split(":")[1];
+          sleepBedPeriod.value = bed.period;
+          sleepWakeHour.value = String(Number(wake.label.split(":")[0]));
+          sleepWakeMinute.value = wake.label.split(":")[1];
+          sleepWakePeriod.value = wake.period;
+          //sleepAlarmToneInput.value = alarm.toneId || ALARM_TONES[0].id;
+          if (sleepToneSelect) {
+            sleepToneSelect.value = alarm.toneId || ALARM_TONES[0].id;
+          }
+        }
+
+        function renderSleepAlarms() {
+          sleepAlarmList.innerHTML = "";
+          sleepAlarmCount.textContent = sleepAlarms.length + (sleepAlarms.length === 1 ? " alarma" : " alarmas");
+          if (!sleepAlarms.length) {
+            sleepAlarmList.innerHTML = '<li class="sleep-alarm-list__empty">No hay alarmas creadas.</li>';
+            setSleepSummary(null);
+            scheduleSleepAlarms();
+            return;
+          }
+          sleepAlarms.forEach(function (alarm) {
+            var li = document.createElement("li");
+            li.className = "sleep-alarm-item" + (alarm.id === selectedSleepAlarmId ? " is-selected" : "");
+            li.innerHTML =
+              '<div><strong>' +
+              alarm.bed +
+              " → " +
+              alarm.wake +
+              '</strong><span>' +
+              alarm.source +
+              " · " +
+              getToneById(alarm.toneId).label +
+              "</span></div>" +
+              '<div class="sleep-alarm-item__actions"><button type="button" data-action="select">Ver</button><button type="button" data-action="edit">Editar</button><button type="button" data-action="delete">Eliminar</button></div>';
+            li.addEventListener("click", function (event) {
+              if (event.target && event.target.closest("button")) {
+                return;
+              }
+              selectedSleepAlarmId = alarm.id;
+              setSleepSummary(alarm);
+              renderSleepAlarms();
+            });
+            li.querySelector('[data-action="select"]').addEventListener("click", function () {
+              selectedSleepAlarmId = alarm.id;
+              setSleepSummary(alarm);
+              renderSleepAlarms();
+            });
+            li.querySelector('[data-action="edit"]').addEventListener("click", function () {
+              sleepEditTargetId = alarm.id;
+              populateSleepForm(alarm);
+              openSleepManualModal();
+            });
+            li.querySelector('[data-action="delete"]').addEventListener("click", function () {
+              sleepAlarms = sleepAlarms.filter(function (item) {
+                return item.id !== alarm.id;
+              });
+              if (selectedSleepAlarmId === alarm.id) {
+                selectedSleepAlarmId = sleepAlarms.length ? sleepAlarms[0].id : null;
+              }
+              if (selectedSleepAlarmId) {
+                var active = sleepAlarms.find(function (item) {
+                  return item.id === selectedSleepAlarmId;
+                });
+                setSleepSummary(active || null);
+              }
+              renderSleepAlarms();
+            });
+            sleepAlarmList.appendChild(li);
+          });
+          scheduleSleepAlarms();
+        }
+
+        function upsertSleepAlarm(payload) {
+          if (sleepEditTargetId) {
+            sleepAlarms = sleepAlarms.map(function (alarm) {
+              if (alarm.id === sleepEditTargetId) {
+                return {
+                  id: alarm.id,
+                  bed: payload.bed,
+                  wake: payload.wake,
+                  source: "Editada",
+                  toneId: payload.toneId || ALARM_TONES[0].id,
+                };
+              }
+              return alarm;
+            });
+            selectedSleepAlarmId = sleepEditTargetId;
+          } else {
+            if (!isPremiumPlan()) {
+              var alarmLimit = getSleepAlarmLimitState();
+              if (!alarmLimit.canCreate) {
+                sleepAlarmStatus.textContent =
+                  "Plan gratis: ya creaste 1 alarma en las ultimas 24 horas. Disponible en " +
+                  getPremiumLeftTime(alarmLimit.remainingMs) +
+                  ".";
+                alert("Plan gratis: solo puedes crear 1 alarma cada 24 horas. Para alarmas ilimitadas, activa Premium.");
+                return;
+              }
+              localStorage.setItem(SLEEP_ALARM_LIMIT_KEY, JSON.stringify({ createdAt: Date.now() }));
+            }
+            var id = Date.now() + "_" + Math.random().toString(16).slice(2);
+            sleepAlarms.unshift({
+              id: id,
+              bed: payload.bed,
+              wake: payload.wake,
+              source: payload.source,
+              toneId: payload.toneId || ALARM_TONES[0].id,
+            });
+            selectedSleepAlarmId = id;
+          }
+          var selected = sleepAlarms.find(function (item) {
+            return item.id === selectedSleepAlarmId;
+          });
+          setSleepSummary(selected || null);
+          renderSleepAlarms();
+        }
+
+        function renderSleepPresets() {
+          sleepSuggestions.innerHTML = "";
+          sleepPresets.forEach(function (preset) {
+            var option = document.createElement("button");
+            option.type = "button";
+            option.className = "sleep-option";
+            option.innerHTML =
+              '<span class="sleep-option__title">' +
+              preset.source +
+              "</span><span class=\"sleep-option__time\">Dormir: " +
+              preset.bed +
+              "</span><span class=\"sleep-option__time\">Despertar: " +
+              preset.wake +
+              "</span>";
+            option.addEventListener("click", function () {
+              upsertSleepAlarm({
+                bed: normalizeTimeLabel(preset.bed),
+                wake: normalizeTimeLabel(preset.wake),
+                source: preset.source,
+                toneId: (sleepToneSelect && sleepToneSelect.value) || ALARM_TONES[0].id,
+              });
+              closeSleepSuggestionsModal();
+            });
+            sleepSuggestions.appendChild(option);
+          });
+        }
+
+        btnVerSugerencias.addEventListener("click", function () {
+          renderSleepPresets();
+          openSleepSuggestionsModal();
+        });
+
+        btnRegistrarHora.addEventListener("click", function () {
+          openSleepManualModal();
+        });
+
+        btnGuardarHorarioManual.addEventListener("click", function () {
+          upsertSleepAlarm({
+            bed: formatManualTime(sleepBedHour, sleepBedMinute, sleepBedPeriod),
+            wake: formatManualTime(sleepWakeHour, sleepWakeMinute, sleepWakePeriod),
+            source: "Personalizada",
+            toneId: (sleepToneSelect && sleepToneSelect.value) || ALARM_TONES[0].id,
+          });
+          closeSleepManualModal();
+        });
+
+        btnSleepClearAll.addEventListener("click", function () {
+          sleepAlarms = [];
+          selectedSleepAlarmId = null;
+          cancelSleepTimers();
+          renderSleepAlarms();
+        });
+
+        btnCloseSleepSuggestions.addEventListener("click", closeSleepSuggestionsModal);
+        btnCloseSleepManual.addEventListener("click", closeSleepManualModal);
+        sleepSuggestionsBackdrop.addEventListener("click", closeSleepSuggestionsModal);
+        sleepManualBackdrop.addEventListener("click", closeSleepManualModal);
+
+        sleepAudio.loop = true;
+        btnPlaySleepAudio.addEventListener("click", function () {
+          if (!isPremiumPlan()) {
+            alert("El audio para dormir es exclusivo de Premium.");
+            return;
+          }
+          if (sleepAudio.paused) {
+            sleepAudio.play();
+            btnPlaySleepAudio.textContent = "Pausar audio";
+          } else {
+            sleepAudio.pause();
+            btnPlaySleepAudio.textContent = "Reproducir audio";
+          }
+        });
+
+        /* Dashboard de Mascotas */
+        var btnMascotaPlan = document.getElementById("btnMascotaPlan");
+        var petSummaryTag = document.getElementById("petSummaryTag");
+        var petSummaryActivity = document.getElementById("petSummaryActivity");
+        var petSummaryDuration = document.getElementById("petSummaryDuration");
+        var petSummaryReminder = document.getElementById("petSummaryReminder");
+        var petAlarmStatus = document.getElementById("petAlarmStatus");
+        var petRecordList = document.getElementById("petRecordList");
+        var petRecordCount = document.getElementById("petRecordCount");
+        var btnPetClearAll = document.getElementById("btnPetClearAll");
+        var petPlansModal = document.getElementById("petPlansModal");
+        var petReminderModal = document.getElementById("petReminderModal");
+        var petPlansBackdrop = document.getElementById("petPlansBackdrop");
+        var petReminderBackdrop = document.getElementById("petReminderBackdrop");
+        var btnClosePetPlans = document.getElementById("btnClosePetPlans");
+        var btnClosePetReminder = document.getElementById("btnClosePetReminder");
+        var petOptions = document.getElementById("petOptions");
+        var petPlanSelect = document.getElementById("petPlanSelect");
+        var petHourInput = document.getElementById("petHourInput");
+        var petMinuteInput = document.getElementById("petMinuteInput");
+        var petPeriodInput = document.getElementById("petPeriodInput");
+        var petToneSelect = document.getElementById("petToneSelect");
+        var btnPreviewPetTone = document.getElementById("btnPreviewPetTone");
+        var btnStopPetTone = document.getElementById("btnStopPetTone");
+        var petReminderTitle = document.getElementById("petReminderTitle");
+        var btnSavePetReminder = document.getElementById("btnSavePetReminder");
+        //var petAlarmToneInput = document.getElementById("petAlarmToneInput");
+        var petActivities = [
+          { title: "Paseo corto", detail: "Camina 10 minutos", minutes: 10 },
+          { title: "Juegos con tu mascota", detail: "Pelota o cuerda 12 minutos", minutes: 12 },
+          { title: "Relajate con tu mascota", detail: "Relájate juntos 8 minutos", minutes: 8 },
+          { title: "Dale de comer", detail: "Pausa nutritiva 6 minutos", minutes: 6 },
+          { title: "Estiramiento en casa", detail: "Movilidad con tu mascota 15 minutos", minutes: 15 },
+        ];
+        var petRecords = [];
+        var petSelectedId = null;
+        var petEditTargetId = null;
+        var petTimers = [];
+
+        function formatPetTime(hourInput, minuteInput, periodInput) {
+          var hour = Math.max(1, Math.min(12, Number(hourInput.value) || 12));
+          var minute = Math.max(0, Math.min(59, Number(minuteInput.value) || 0));
+          hourInput.value = String(hour);
+          minuteInput.value = String(minute).padStart(2, "0");
+          return {
+            label: String(hour).padStart(2, "0") + ":" + String(minute).padStart(2, "0") + " " + periodInput.value,
+            hour: hour,
+            minute: minute,
+            period: periodInput.value === "PM" ? "PM" : "AM",
+          };
+        }
+
+        function activityIndexFromTitle(title) {
+          var i = petActivities.findIndex(function (a) {
+            return a.title === title;
+          });
+          return i >= 0 ? i : 0;
+        }
+
+        function fillPetPlanSelect() {
+          petPlanSelect.innerHTML = "";
+          petActivities.forEach(function (activity, index) {
+            var opt = document.createElement("option");
+            opt.value = String(index);
+            opt.textContent = activity.title + " (" + activity.minutes + " min)";
+            petPlanSelect.appendChild(opt);
+          });
+        }
+
+        function activityFromPlanSelect() {
+          var idx = Number(petPlanSelect.value);
+          if (!Number.isFinite(idx)) {
+            idx = 0;
+          }
+          idx = Math.max(0, Math.min(petActivities.length - 1, Math.floor(idx)));
+          return petActivities[idx];
+        }
+
+        function nextPetDate(record) {
+          var p = parseTimeParts(record.reminder);
+          var now = new Date();
+          var next = new Date(now);
+          next.setHours(to24Hour(p.hour, p.period), p.minute, 0, 0);
+          if (next <= now) {
+            next.setDate(next.getDate() + 1);
+          }
+          return next;
+        }
+
+        function cancelPetTimers() {
+          petTimers.forEach(function (t) {
+            clearTimeout(t);
+          });
+          petTimers = [];
+        }
+
+        function schedulePetReminders() {
+          cancelPetTimers();
+          if (!petRecords.length) {
+            petAlarmStatus.textContent = "Recordatorio no programado.";
+            return;
+          }
+          var nextUpcoming = null;
+          petRecords.forEach(function (record) {
+            var next = nextPetDate(record);
+            if (!nextUpcoming || next < nextUpcoming.date) {
+              nextUpcoming = { date: next, record: record };
+            }
+            petTimers.push(
+              setTimeout(function () {
+                playSelectedAlarmTone(record.toneId);
+                alert("NeuroNest: recordatorio de pausa · " + record.activity + ".");
+                schedulePetReminders();
+              }, Math.max(0, next.getTime() - Date.now()))
+            );
+          });
+          petAlarmStatus.textContent = "Próximo recordatorio: " + nextUpcoming.record.reminder + " · " + nextUpcoming.record.activity + ".";
+        }
+
+        function openPetPlansModal() {
+          petPlansModal.removeAttribute("hidden");
+        }
+
+        function closePetPlansModal() {
+          petPlansModal.setAttribute("hidden", "");
+        }
+
+        function openPetReminderModal() {
+          petReminderModal.removeAttribute("hidden");
+        }
+
+        function closePetReminderModal() {
+          petReminderModal.setAttribute("hidden", "");
+          petEditTargetId = null;
+        }
+
+        function setPetSummary(record) {
+          if (!record) {
+            petSummaryTag.textContent = "Sin seleccionar";
+            petSummaryActivity.textContent = "-";
+            petSummaryDuration.textContent = "-";
+            petSummaryReminder.textContent = "-";
+            petAlarmStatus.textContent = "Recordatorio no programado.";
+            return;
+          }
+          petSummaryTag.textContent = record.source || "Seleccionado";
+          petSummaryActivity.textContent = record.activity;
+          petSummaryDuration.textContent = record.minutes + " min";
+          petSummaryReminder.textContent = record.reminder;
+        }
+
+        function normalizeLegacyRecord(record) {
+          var act = typeof record.activity === "string" ? record.activity : "Pausa";
+          var mins =
+            typeof record.minutes === "number"
+              ? record.minutes
+              : petActivities[activityIndexFromTitle(act)].minutes;
+          return {
+            id: record.id,
+            activity: act,
+            minutes: mins,
+            reminder: record.reminder,
+            source: record.source || "Recordatorio",
+            toneId: record.toneId || ALARM_TONES[0].id,
+          };
+        }
+
+        function populateReminderForm(record) {
+          fillPetPlanSelect();
+          petPlanSelect.value = String(activityIndexFromTitle(record.activity));
+          var parts = parseTimeParts(record.reminder);
+          petHourInput.value = String(Number(parts.label.split(":")[0]));
+          petMinuteInput.value = parts.label.split(":")[1];
+          petPeriodInput.value = parts.period;
+          //petAlarmToneInput.value = record.toneId || ALARM_TONES[0].id;
+          if (petToneSelect) {
+            petToneSelect.value = record.toneId || ALARM_TONES[0].id;
+          }
+        }
+
+        function renderPetOptions() {
+          petOptions.innerHTML = "";
+          petActivities.forEach(function (activity, index) {
+            var btn = document.createElement("button");
+            btn.type = "button";
+            btn.className = "pet-option";
+            btn.innerHTML =
+              '<span class="pet-option__title">Plan ' +
+              (index + 1) +
+              ": " +
+              activity.title +
+              "</span><span class=\"pet-option__detail\">" +
+              activity.detail +
+              "</span><strong class=\"pet-option__meta\">" +
+              activity.minutes +
+              " minutos</strong>";
+            btn.addEventListener("click", function () {
+              petEditTargetId = null;
+              petReminderTitle.textContent = "Nuevo recordatorio";
+              fillPetPlanSelect();
+              petPlanSelect.value = String(index);
+              petHourInput.value = "7";
+              petMinuteInput.value = "30";
+              petPeriodInput.value = "AM";
+              //petAlarmToneInput.value = ALARM_TONES[0].id;
+              closePetPlansModal();
+              openPetReminderModal();
+            });
+            petOptions.appendChild(btn);
+          });
+        }
+
+        function renderPetRecords() {
+          petRecordList.innerHTML = "";
+          petRecordCount.textContent = petRecords.length + (petRecords.length === 1 ? " recordatorio" : " recordatorios");
+          if (!petRecords.length) {
+            petRecordList.innerHTML = '<li class="pet-record-list__empty">Aún no has creado recordatorios.</li>';
+            setPetSummary(null);
+            schedulePetReminders();
+            return;
+          }
+          petRecords.forEach(function (record) {
+            record = normalizeLegacyRecord(record);
+            var li = document.createElement("li");
+            li.className = "pet-record-item" + (record.id === petSelectedId ? " is-selected" : "");
+            li.innerHTML =
+              '<div><strong>' +
+              record.activity +
+              '</strong><span>' +
+              record.reminder +
+              " · " +
+              record.minutes +
+              " min · " +
+              getToneById(record.toneId).label +
+              '</span></div><div class="pet-record-item__actions"><button type="button" data-action="select">Seleccionar</button><button type="button" data-action="edit">Editar</button><button type="button" data-action="delete">Eliminar</button></div>';
+            li.addEventListener("click", function (event) {
+              if (event.target && event.target.closest("button")) {
+                return;
+              }
+              petSelectedId = record.id;
+              setPetSummary(record);
+              renderPetRecords();
+            });
+            li.querySelector('[data-action="select"]').addEventListener("click", function () {
+              petSelectedId = record.id;
+              setPetSummary(record);
+              renderPetRecords();
+            });
+            li.querySelector('[data-action="edit"]').addEventListener("click", function () {
+              petEditTargetId = record.id;
+              petReminderTitle.textContent = "Editar recordatorio";
+              populateReminderForm(record);
+              openPetReminderModal();
+            });
+            li.querySelector('[data-action="delete"]').addEventListener("click", function () {
+              petRecords = petRecords.filter(function (item) {
+                return item.id !== record.id;
+              });
+              if (petSelectedId === record.id) {
+                petSelectedId = petRecords.length ? petRecords[0].id : null;
+              }
+              var current = petRecords.find(function (item) {
+                return item.id === petSelectedId;
+              });
+              setPetSummary(current ? normalizeLegacyRecord(current) : null);
+              renderPetRecords();
+            });
+            petRecordList.appendChild(li);
+          });
+          schedulePetReminders();
+        }
+
+        function upsertReminder() {
+          var time = formatPetTime(petHourInput, petMinuteInput, petPeriodInput);
+          var plan = activityFromPlanSelect();
+          if (petEditTargetId) {
+            petRecords = petRecords.map(function (record) {
+              if (record.id === petEditTargetId) {
+                return {
+                  id: record.id,
+                  activity: plan.title,
+                  minutes: plan.minutes,
+                  reminder: time.label,
+                  source: "Editado",
+                  toneId: (petToneSelect && petToneSelect.value) || ALARM_TONES[0].id,
+                };
+              }
+              return record;
+            });
+            petSelectedId = petEditTargetId;
+          } else {
+            if (!isPremiumPlan() && petRecords.length >= 2) {
+              petAlarmStatus.textContent = "Plan gratis: maximo 2 recordatorios. Activa Premium para recordatorios ilimitados.";
+              alert("Plan gratis: solo puedes crear hasta 2 recordatorios. Con Premium no tendras limite.");
+              return;
+            }
+            var id = Date.now() + "_" + Math.random().toString(16).slice(2);
+            petRecords.unshift({
+              id: id,
+              activity: plan.title,
+              minutes: plan.minutes,
+              reminder: time.label,
+              source: "Recordatorio",
+              toneId: (petToneSelect && petToneSelect.value) || ALARM_TONES[0].id,
+            });
+            petSelectedId = id;
+          }
+          var selected = petRecords.find(function (item) {
+            return item.id === petSelectedId;
+          });
+          setPetSummary(selected ? normalizeLegacyRecord(selected) : null);
+          renderPetRecords();
+        }
+
+        btnMascotaPlan.addEventListener("click", function () {
+          renderPetOptions();
+          openPetPlansModal();
+        });
+
+        btnSavePetReminder.addEventListener("click", function () {
+          upsertReminder();
+          closePetReminderModal();
+        });
+
+        btnPetClearAll.addEventListener("click", function () {
+          petRecords = [];
+          petSelectedId = null;
+          cancelPetTimers();
+          renderPetRecords();
+        });
+
+        btnClosePetPlans.addEventListener("click", closePetPlansModal);
+        btnClosePetReminder.addEventListener("click", closePetReminderModal);
+        petPlansBackdrop.addEventListener("click", closePetPlansModal);
+        petReminderBackdrop.addEventListener("click", closePetReminderModal);
+
+        btnPreviewFocusTone.addEventListener("click", function () {
+          playSelectedAlarmTone((focusToneSelect && focusToneSelect.value) || ALARM_TONES[0].id);
+        });
+        btnPreviewStretchTone.addEventListener("click", function () {
+          playSelectedAlarmTone((stretchToneSelect && stretchToneSelect.value) || ALARM_TONES[0].id);
+        });
+        btnPreviewSleepTone.addEventListener("click", function () {
+          playSelectedAlarmTone((sleepToneSelect && sleepToneSelect.value) || ALARM_TONES[0].id);
+        });
+        btnPreviewPetTone.addEventListener("click", function () {
+          playSelectedAlarmTone((petToneSelect && petToneSelect.value) || ALARM_TONES[0].id);
+        });
+        btnStopFocusTone.addEventListener("click", stopActiveAlarmTone);
+        btnStopStretchTone.addEventListener("click", stopActiveAlarmTone);
+        btnStopSleepTone.addEventListener("click", stopActiveAlarmTone);
+        btnStopPetTone.addEventListener("click", stopActiveAlarmTone);
+        if (btnStopActiveAlarm) {
+          btnStopActiveAlarm.addEventListener("click", stopActiveAlarmTone);
+        }
+
+        if (sleepToneSelect) {
+          sleepToneSelect.addEventListener("change", function () {
+            if (sleepAlarmToneInput) {
+              sleepAlarmToneInput.value = sleepToneSelect.value;
+            }
+          });
+        }
+        if (petToneSelect) {
+          petToneSelect.addEventListener("change", function () {
+            if (petAlarmToneInput) {
+              //petAlarmToneInput.value = petToneSelect.value;
+            }
+          });
+        }
+
+        fillPetPlanSelect();
+        fillToneSelect(focusToneSelect, ALARM_TONES[0].id);
+        fillToneSelect(stretchToneSelect, ALARM_TONES[0].id);
+        fillToneSelect(sleepToneSelect, ALARM_TONES[0].id);
+        fillToneSelect(petToneSelect, ALARM_TONES[0].id);
+        //fillToneSelect(sleepAlarmToneInput, ALARM_TONES[0].id);
+        //fillToneSelect(petAlarmToneInput, ALARM_TONES[0].id);
+
+        renderSleepAlarms();
+        renderPetRecords();
+
+        document.addEventListener("keydown", function (event) {
+          if (event.key === "Escape") {
+            if (premiumCheckoutModal && !premiumCheckoutModal.hidden) {
+              closePremiumCheckoutModal();
+              return;
+            }
+            if (proCitaModal && !proCitaModal.hidden) {
+              closeProCitaModal();
+              return;
+            }
+            closeStretchModal();
+            closeSleepSuggestionsModal();
+            closeSleepManualModal();
+            closePetPlansModal();
+            closePetReminderModal();
+            closeProfileEditModal();
+            closePremiumModalFn();
+          }
+        });
+      })();
+    </script>
+  </body>
+</html>
