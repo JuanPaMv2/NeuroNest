@@ -1859,8 +1859,13 @@
                 refreshStretchDisplay();
               } else {
                 stopStretchTimer();
-                playSelectedAlarmTone((stretchToneSelect && stretchToneSelect.value) || ALARM_TONES[0].id);
-                alert("NeuroNest: terminaste tu estiramiento.");
+                playSelectedAlarmTone(
+                  (stretchToneSelect && stretchToneSelect.value) || ALARM_TONES[0].id,
+                  "Estiramiento completado"
+                );
+                if (stretchCountdown) {
+                  stretchCountdown.textContent = "¡Listo!";
+                }
               }
             }, 1000);
           } else {
@@ -2015,7 +2020,7 @@
           });
         }
 
-        function playSelectedAlarmTone(toneId) {
+        function playSelectedAlarmTone(toneId, detailMessage) {
           stopActiveAlarmTone();
           var tone = getToneById(toneId);
           var candidates = [
@@ -2028,9 +2033,23 @@
           var audio = new Audio();
           audio.preload = "auto";
 
+          function showAlarmBar(title, labelText) {
+            if (alarmNowBar) {
+              alarmNowBar.removeAttribute("hidden");
+              alarmNowTitle.textContent = title;
+              alarmNowLabel.textContent = labelText;
+            }
+          }
+
           function tryPlay() {
             if (attempt >= candidates.length) {
-              alert("No se encontro el archivo de " + tone.label + " en la carpeta audio.");
+              activeAlarmAudio = null;
+              showAlarmBar(
+                "Sin audio",
+                "No se encontro " +
+                  tone.baseName +
+                  " en la carpeta audio (.mp3, .wav, .ogg o .m4a)."
+              );
               return;
             }
             audio.src = candidates[attempt];
@@ -2043,11 +2062,10 @@
 
           tryPlay();
           activeAlarmAudio = audio;
-          if (alarmNowBar) {
-            alarmNowBar.removeAttribute("hidden");
-            alarmNowTitle.textContent = "⏱ Alarma activa";
-            alarmNowLabel.textContent = tone.label + " sonando en bucle.";
-          }
+          var baseLabel = detailMessage
+            ? detailMessage + " · " + tone.label + " sonando en bucle."
+            : tone.label + " sonando en bucle.";
+          showAlarmBar("⏱ Alarma activa", baseLabel);
         }
 
         function stopActiveAlarmTone() {
@@ -2112,8 +2130,8 @@
           var next = nextDateFromTimeLabel(label);
           var delay = Math.max(0, next.getTime() - Date.now());
           var timerId = setTimeout(function () {
-            playSelectedAlarmTone(alarm.toneId);
-            alert("NeuroNest: alarma de sueño (" + type + ") - " + label + ".");
+            var kindLabel = type === "dormir" ? "Hora de dormir" : "Hora de despertar";
+            playSelectedAlarmTone(alarm.toneId, kindLabel + " · " + label);
             scheduleSleepAlarms();
           }, delay);
           sleepAlarmTimers.push({ id: timerId, alarmId: alarm.id, key: key });
@@ -2445,8 +2463,7 @@
             }
             petTimers.push(
               setTimeout(function () {
-                playSelectedAlarmTone(record.toneId);
-                alert("NeuroNest: recordatorio de pausa · " + record.activity + ".");
+                playSelectedAlarmTone(record.toneId, "Recordatorio de pausa · " + record.activity);
                 schedulePetReminders();
               }, Math.max(0, next.getTime() - Date.now()))
             );
